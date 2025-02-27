@@ -191,8 +191,7 @@ print("%s location at %s" %(p.Name, p.Location))
 
 ########################################################
 
-
-#Asignacion de un delegado en lugar de un metodo directamente a un evento plus pasando un metodo Eventargs a un evento LocationEventargs
+#Asigning a Delegate instead of passing a function/method directly (Due Delegates are callables) to an event, using polimorfism and pasing a function with parameter EventArg to a LocationEventArg event
 d = Delegate(callback_function) 
 p.LocationChanged += d
 p.Name = "Chisus"
