@@ -138,7 +138,7 @@ class event:
     def __init__(
         self,
         fadd:Callable[[Callable[[object,EventArgs], None]], None] | None = None,
-        fremove:Callable[[Callable[[object,EventArgs], None]], None] | None = None,
+        fremove:Callable[[Callable[[object,EventArgs], None]], None] | None = None
     )->None:
         """
         event constructor.
