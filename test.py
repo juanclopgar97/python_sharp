@@ -138,7 +138,7 @@ class Person:
         return Person._instance_created
     
     @InstanceCreated.setter
-    def InstanceCreated(value:int)->None:
+    def _InstanceCreated(value:int)->None:
         Person._instance_created = value
 
 # endregion
@@ -159,7 +159,7 @@ class Person:
 
     @staticmethod
     def _OnPersonCreated(e:EventArgs)->None:
-        Person.InstanceCreated +=1
+        Person._InstanceCreated +=1
         Person._personCreatedcallbacks(None,e)
 
     def Kill(self)->None:
