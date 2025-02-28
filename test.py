@@ -79,6 +79,9 @@ class LocationChangingEventArgs(CancellableEventArg):
 
 class Person:
 
+    instance_created:int = 0
+    _personCreatedcallbacks:Delegate = Delegate()
+
     _name:str
     _alive:bool
     _location:Point
@@ -95,6 +98,7 @@ class Person:
         self._locationChangedcallbacks = Delegate()
         self._locationChangingcallbacks = Delegate()
         self._diedcallbacks = Delegate()
+        Person._OnPersonCreated(EventArgs())
         
 # region Properties
 
@@ -144,6 +148,10 @@ class Person:
     def _OnDied(self,e:EventArgs)->None:
         self._diedcallbacks(self,e)   
 
+    @staticmethod
+    def _OnPersonCreated(e:EventArgs)->None:
+        Person.instance_created +=1
+        Person._personCreatedcallbacks(None,e)
 
     def Kill(self)->None:
         self._alive = False
@@ -187,6 +195,15 @@ class Person:
     @Died.remove
     def Died(self,value:Callable[[object, EventArgs], None])->None:
         self._diedcallbacks -= value
+
+
+    @staticevent
+    def PersonCreated(value:Callable[[object, EventArgs], None])->None:
+        Person._personCreatedcallbacks += value
+
+    @PersonCreated.remove
+    def PersonCreated(value:Callable[[object, EventArgs], None])->None:
+        Person._personCreatedcallbacks -= value
 
 # endregion
 
@@ -287,3 +304,12 @@ person.Location = Point(1,1)#changing location to trigger event
 school.Principal = person #Asign a principal to the school, the school will unsuscribe the old principal (if any) and suscribe to the new principal.Died event due it is of its interest know when its principal dies
 person.Kill() #We kill the person :( (school will do its logic due its principal dies)
 #------------------------------------------------------------------------------------------------------------------------------------------
+
+#Static event example
+def person_created_callback(sender:object,e:EventArgs):
+    print("Static callback works! person count:%d"%Person.instance_created)
+
+proxy = Person.PersonCreated 
+proxy += person_created_callback
+
+person2 = Person("")

@@ -1,4 +1,5 @@
 from typing import Callable,Any,List,Generic,TypeVar,Union
+from abc import ABC, abstractmethod
 
 T=TypeVar("T")
 
@@ -120,9 +121,9 @@ class CancellableEventArg(EventArgs):
         """
         self._cancel = value
 
-class event:
+class BaseEvent(ABC):
     """
-    Event attribute, used to define a managed callback
+    event attribute, used to define a managed callback
 
     Attributes:
         _fadd (Callable[[Callable[[object,EventArgs], None]], None] | None): function to be used for adding a callable value.
@@ -131,7 +132,7 @@ class event:
     """
     _fadd: Callable[[Callable[[object,EventArgs], None]], None] | None
     _fremove:Callable[[Callable[[object,EventArgs], None]], None] | None
-    _proxy: Union["Event" , None]
+    _proxy: Union[object , None]
 
     def __init__(
         self,
@@ -186,7 +187,11 @@ class event:
         self._fremove = fremove
         return self
     
-    def __get__(self, instance:object, owner:type)->"Event":
+    @abstractmethod
+    def _get_proxy(self, instance: object, owner: type) -> Any:
+        pass
+
+    def __get__(self, instance:object, owner:type)->object:
         """
         Method to get descriptor value.
 
@@ -210,12 +215,12 @@ class event:
             
             raise NotImplementedError(error_message) 
 
-        if self._proxy is None or self._proxy._instance != instance:
-            self._proxy = self.Event(instance, self)
+        return self._get_proxy(instance,owner) 
 
-        return self._proxy
-    
-
+class event(BaseEvent):
+    """
+    event attribute, used to define a managed callback
+    """
     class Event:
         """
         Event is class used as proxy for the 'event' descriptor. its responsability is execute _fadd and _fremove when operators += and -- are used over the member marked as @event.
@@ -265,7 +270,32 @@ class event:
             """
             self._event_descriptor._fremove(self._instance, value)
             return self
-    
+
+    def _get_proxy(self, instance: object, owner: type) -> "event.Event":
+        if self._proxy is None or self._proxy._instance != instance:
+            self._proxy = event.Event(instance, self)
+        return self._proxy
  
+
+class staticevent(BaseEvent):
+    class StaticEvent:
+        _event_descriptor: "staticevent"
+
+        def __init__(self, event_descriptor: "staticevent") -> None:
+            self._event_descriptor = event_descriptor
+
+        def __iadd__(self, value: Callable[[object, Any], None]) -> "staticevent.StaticEvent":
+            self._event_descriptor._fadd(value)
+            return self
+
+        def __isub__(self, value: Callable[[object, Any], None]) -> "staticevent.StaticEvent":
+            self._event_descriptor._fremove(value)
+            return self
+
+    def _get_proxy(self, instance: object, owner: type) -> "staticevent.StaticEvent":
+        if self._proxy is None:
+            self._proxy = staticevent.StaticEvent(self)
+        return self._proxy
+
 #staticproperty
 
