@@ -285,5 +285,5 @@ person.Location = Point(1,1)#changing location to trigger event
 
 #suscribing the methods internally on the class-------------------------------------------------------------------------------------------
 school.Principal = person #Asign a principal to the school, the school will unsuscribe the old principal (if any) and suscribe to the new principal.Died event due it is of its interest know when its principal dies
-person.Kill() #We kill the person :(
+person.Kill() #We kill the person :( (school will do its logic due its principal dies)
 #------------------------------------------------------------------------------------------------------------------------------------------
