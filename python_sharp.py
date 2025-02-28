@@ -120,8 +120,6 @@ class CancellableEventArg(EventArgs):
         """
         self._cancel = value
 
-
-
 class event:
     """
     Event attribute, used to define a managed callback
@@ -190,6 +188,10 @@ class event:
         Return:
             Event: Event value stored in the descriptor.
         """
+
+        if self._fremove is None:
+            raise NotImplementedError("The event %s is being use without a remove (@%s.remove) definition on %s"% (self._fadd.__name__,self._fadd.__name__,owner) )  
+
         if self._proxy is None or self._proxy._instance != instance:
             self._proxy = self.Event(instance, self)
 
