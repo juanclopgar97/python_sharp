@@ -1,91 +1,121 @@
 from python_sharp import *
 
 class Point:
-    def __init__(self,x,y):
-        self.x =x
-        self.y =y 
+
+    _x:int
+    _y:int
+
+    def __init__(self,x:int,y:int)->None:
+        self._x = x
+        self._y = y 
 
     @property
-    def X(self):
-        return self.x
+    def X(self)->int:
+        return self._x
     
     @property
-    def Y(self):
-        return self.y
+    def Y(self)->int:
+        return self._y
 
-    def __sub__(self,value):
+    def __sub__(self,value:"Point") ->"Vector":
         if isinstance(value, Point):
-            return Vector(self.x - value.x, self.y - value.y)
+            return Vector(self.X - value.X, self.Y - value.Y)
         return NotImplemented
 
-    def __str__(self):
+    def __str__(self)->str:
         return "(%d, %d)" % (self.X,self.Y)
     
+
 class Vector:
-    def __init__(self,i,j):
-        self.i =i
-        self.j =j 
+
+    _i:int
+    _j:int
+
+    def __init__(self,i:int,j:int)->None:
+        self._i =i
+        self._j =j 
 
     @property
-    def I(self):
-        return self.i
+    def I(self)->int:
+        return self._i
     
     @property
-    def J(self):
-        return self.j 
+    def J(self)->int:
+        return self._j 
 
-    def __str__(self):
+    def __str__(self)->str:
         return "%d i, %d j" % (self.I,self.J)
 
 
 
 class LocationChangedEventArgs(EventArgs):
     
-    def __init__(self,delta:Vector):
+    _delta:Vector
+
+    def __init__(self,delta:Vector)->None:
         super().__init__()
-        self.delta = delta
+        self._delta = delta
 
     @property
     def Delta(self)->Vector:
-        return self.delta
+        return self._delta
+
+
 
 class LocationChangingEventArgs(CancellableEventArg):
-    def __init__(self,location:Point):
+    
+    _location:Point
+
+    def __init__(self,location:Point)->None:
         super().__init__()
-        self.location = location
+        self._location = location
 
     @property
     def Location(self)->Vector:
-        return self.location
+        return self._location
 
 
 
 
 class Person:
-    def __init__(self,name):
-        self.name = name
-        self.location = Point(0,0)
-        self.nameChangedcalbacks = Delegate()
-        self.locationChangedcallbacks = Delegate()
-        self.locationChangingcallbacks = Delegate()
-        
 
+    _name:str
+    _alive:bool
+    _location:Point
+    _nameChangedcalbacks:Delegate
+    _locationChangedcallbacks:Delegate
+    _locationChangingcallbacks:Delegate
+    _diedcallbacks:Delegate
+
+    def __init__(self,name:str)->None:
+        self._name = name
+        self._alive = True
+        self._location = Point(0,0)
+        self._nameChangedcalbacks = Delegate()
+        self._locationChangedcallbacks = Delegate()
+        self._locationChangingcallbacks = Delegate()
+        self._diedcallbacks = Delegate()
+        
 # region Properties
 
-
     @property
-    def Name(self): 
-        return self.name
+    def Name(self)->str: 
+        return self._name
                
     @Name.setter 
-    def Name(self,value:str):
-        self.name = value
+    def Name(self,value:str)->None:
+        self._name = value
         self._OnNameChanged(EventArgs()) 
 
      
     @property
-    def Location(self):
-        return self.location
+    def Alive(self)->bool:
+        return self._alive
+    
+
+    @property
+    def Location(self)->Point:
+        return self._location
     
     @Location.setter
     def Location(self,value:Point)->None:
@@ -94,105 +124,166 @@ class Person:
         self._OnLocationChanging(locationEventArgs)
         
         if(not locationEventArgs.Cancel):
-            previous = self.location 
-            self.location = value
-            self._OnLocationChanged(LocationChangedEventArgs(self.location - previous))
+            previous = self.Location 
+            self._location = value
+            self._OnLocationChanged(LocationChangedEventArgs(self.Location - previous))
 
 # endregion
 
 # region  Methods
    
     def _OnNameChanged(self,e:EventArgs)->None:
-        self.nameChangedcalbacks(self,e)
+        self._nameChangedcalbacks(self,e)
     
     def _OnLocationChanging(self,e:LocationChangingEventArgs)->None:
-        self.locationChangingcallbacks(self,e)
+        self._locationChangingcallbacks(self,e)
 
     def _OnLocationChanged(self,e:LocationChangedEventArgs)->None:
-        self.locationChangedcallbacks(self,e)          
+        self._locationChangedcallbacks(self,e)          
         
+    def _OnDied(self,e:EventArgs)->None:
+        self._diedcallbacks(self,e)   
+
+
+    def Kill(self)->None:
+        self._alive = False
+        self._OnDied(EventArgs())
+
 # endregion
 
 # region Events
     
-    @event
-    def NameChanged(self,value: Callable[[object, EventArgs], None] ):
-        self.nameChangedcalbacks += value 
+    @event  #Simplest event, just notify something happens, no provide extra information about the event (like why,how,when), no recolection of information from suscribers
+    def NameChanged(self,value: Callable[[object, EventArgs], None])->None:
+        self._nameChangedcalbacks += value 
         
     @NameChanged.remove
-    def NameChanged(self,value: Callable[[object, EventArgs], None]):
-       self.nameChangedcalbacks -= value
+    def NameChanged(self,value: Callable[[object, EventArgs], None])->None:
+       self._nameChangedcalbacks -= value
+
+
+    @event  #event with custom EventArgs, notify something happens and provides extra information (like why,how,when),  no recolection of information from suscribers
+    def LocationChanged(self,value:Callable[[object, LocationChangingEventArgs], None])->None:
+        self._locationChangedcallbacks += value
+    
+    @LocationChanged.remove
+    def LocationChanged(self,value:Callable[[object, LocationChangingEventArgs], None])->None:
+       self._locationChangedcallbacks -= value  
+
+
+    @event  #event with custom EventArgs, notify something happens provides extra information (like why,how,when), and it is capable of recolect info from its suscribers (this case implemeted as prevent)
+    def LocationChanging(self,value:Callable[[object, LocationChangedEventArgs], None])->None:
+        self._locationChangingcallbacks += value
+    
+    @LocationChanging.remove
+    def LocationChanging(self,value:Callable[[object, LocationChangedEventArgs], None])->None:
+       self._locationChangingcallbacks -= value
 
 
     @event
-    def LocationChanging(self,value:Callable[[object, LocationChangedEventArgs], None]):
-        self.locationChangingcallbacks += value
+    def Died(self,value:Callable[[object, EventArgs], None])->None:
+        self._diedcallbacks += value
     
-    @LocationChanging.remove
-    def LocationChanging(self,value:Callable[[object, LocationChangedEventArgs], None]):
-       self.locationChangingcallbacks -= value
-                     
-    
-    @event      
-    def LocationChanged(self,value:Callable[[object, LocationChangingEventArgs], None]):
-        self.locationChangedcallbacks += value
-    
-    @LocationChanged.remove
-    def LocationChanged(self,value:Callable[[object, LocationChangingEventArgs], None]):
-       self.locationChangedcallbacks -= value  
+    @Died.remove
+    def Died(self,value:Callable[[object, EventArgs], None])->None:
+        self._diedcallbacks -= value
 
-    
 # endregion
 
-
-    
-
-#use of it
-
-p = Person("Carlos")
-
-def callback_function(sender:object,e:EventArgs):
-    print("callback sender %s, Eventargs: %s" % (sender,e))
-    print("Person name %s" % sender.Name)
-
-
 class School:
-    def __init__(self):
-        pass
+    
+    _name:str
+    _principal:Person|None
+    
+    def __init__(self,name:str)->None:
+        self._name = name
+        self._principal = None
 
-    def persona_nameChanged(self,sender:object,e:EventArgs)->None:
-        print("School just signed up to %s"% sender.Name)
+    @property
+    def Name(self)->str: 
+        return self._name
+               
+    @Name.setter 
+    def Name(self,value:str)->None:
+        self._name = value
 
-    def persona_locationchanged(self,sender:object,e:LocationChangedEventArgs)->None:
+
+    @property
+    def Principal(self)->Person: 
+        return self._principal
+               
+    @Principal.setter 
+    def Principal(self,value:Person)->None:
+        if self.Principal is not None:
+            self.Principal.Died -= self._person_died
+
+        self._principal = value
+
+        if self.Principal is not None:
+            self.Principal.Died += self._person_died
+
+
+    def person_nameChanged(self,sender:object,e:EventArgs)->None:
+        print("School %s just signed up %s"% (self.Name,sender.Name))
+
+    def person_locationchanged(self,sender:object,e:LocationChangedEventArgs)->None:
         print("Person %s change its localitation by %s units" % (sender.Name,e.Delta))
 
-    def persona_locationchanging(self,sender:object,e:LocationChangingEventArgs)->None:
+    def person_locationchanging(self,sender:object,e:LocationChangingEventArgs)->None:
         if e.Location.X > 100:
             print("Person %s can't be changed that far, 'X can't be greater than 100. value: %d'" % (sender.Name,e.Location.X))
             e.Cancel = True
 
-e = School()
-p.NameChanged += e.persona_nameChanged 
-p.NameChanged += callback_function
-p.Name = "Susa"
-p.NameChanged -= callback_function
-p.Name = "Nos"
-p.Location = Point(5,5)
-p.LocationChanged += e.persona_locationchanged
-p.Location = Point(15,15)
-p.LocationChanged -= e.persona_locationchanged 
-p.Location = Point(30,30)
-p.LocationChanging += e.persona_locationchanging
+    def _person_died(self,sender:object,e:EventArgs):
+        print("School %s is sad because principal %s die" % (self.Name,sender.Name))
 
-p.Location = Point(13,13)
-p.Location = Point(115,2)
 
-print("%s location at %s" %(p.Name, p.Location))
+def callback_function(sender:object,e:EventArgs)->None:
+    print("callback sender %s, Eventargs: %s" % (sender,e))
+    print("Person name %s" % sender.Name)
 
-########################################################
 
-#Asigning a Delegate instead of passing a function/method directly (Due Delegates are callables) to an event, using polimorfism and pasing a function with parameter EventArg to a LocationEventArg event
-d = Delegate(callback_function) 
-p.LocationChanged += d
-p.Name = "Chisus"
-######################################################################################################################################
+
+#USAGE EXAMPLES------------------------------------------------------------------------------------------------------------------------
+person = Person("Carlos")#Creates an instance of Person (This class is the one that implements the events)
+school = School("University 97")#Creates an instance of School (This class contains some methods that are going to be subscribed to the person events, internally and externally)
+
+
+#Use of a simple event (In this case implemented as a property change event)------------------------------------------------------------
+person.NameChanged += school.person_nameChanged #suscribe the school instance method to Namechanged event, (this method will be executed when the person's name change)
+person.NameChanged += callback_function #suscribe an extra simple function (this function will be executed when the person's name change)
+person.Name = "Susa" #Change the person name to trigger the event
+#----------------------------------------------------------------------------------------------------------------------------------------
+
+#How to unsuscribe an event--------------------------------------------------------------------------------------------------------------
+person.NameChanged -= callback_function#unsuscribe only the function
+person.Name = "Nos"#Change the person name to trigger the event
+#----------------------------------------------------------------------------------------------------------------------------------------
+
+#Use of an event with custom EventArgs---------------------------------------------------------------------------------------------------
+person.Location = Point(5,5)#changing location to show nothing happens
+person.LocationChanged += school.person_locationchanged#add a suscriber to the event
+person.Location = Point(15,15)#changing the location again to trigger the event
+person.LocationChanged -= school.person_locationchanged#unsuscribe to the event
+person.Location = Point(30,30)#changing again the location to verify nothing happens
+#----------------------------------------------------------------------------------------------------------------------------------------
+
+#Use of a custom Eventargs with setter (allows to susscriber send information) in this case is implemented as a pre-event (triggers before something happens) this allows in this case cancel the Change of the person's location
+person.LocationChanging += school.person_locationchanging #add the suscriber
+person.Location = Point(13,13) #change the location to trigger the event
+person.Location = Point(115,2) #changing location again to trigger the event, suscriber has the capability to cancel the asignation of the new value
+print("%s location at %s" %(person.Name, person.Location))#checking person's location it is (13,13) due suscriber cancel the asignation of the action thorugh the pre-event
+#----------------------------------------------------------------------------------------------------------------------------------------
+
+
+#suscribing a Delegate instead of passing a function/method directly (Due Delegates are callables) to an event, as well show case of using polimorfism, pasing an EventArgs parameter function to a LocationEventArgs parameter event
+delegate = Delegate(callback_function) #create a delagate with one function with signature  Callable[[object, EventArgs], None]
+person.LocationChanged += delegate #suscribing a   Callable[[object, EventArgs], None] to Callable[[object, LocationChangedEventArgs], None] event
+person.Location = Point(1,1)#changing location to trigger event 
+#in this case the event will provide an LocationChangedEventArgs instance to the suscriber (the 'e' parameter), and suscriber handle the object as an EventArgs instance, by polimorfism is ok
+#-----------------------------------------------------------------------------------------------------------------------------------------
+
+#suscribing the methods internally on the class-------------------------------------------------------------------------------------------
+school.Principal = person #Asign a principal to the school, the school will unsuscribe the old principal (if any) and suscribe to the new principal.Died event due it is of its interest know when its principal dies
+person.Kill() #We kill the person :(
+#------------------------------------------------------------------------------------------------------------------------------------------
