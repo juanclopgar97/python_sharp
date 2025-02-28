@@ -147,8 +147,12 @@ class event:
         Return:
             None
         """
-        self._fadd = fadd
-        self._fremove = fremove
+        self._fadd = None
+        self._fremove = None
+
+        self.add(fadd)
+        self.remove(fremove)
+
         self._proxy = None
 
     
@@ -161,6 +165,9 @@ class event:
         Return:
             event: Current instance with the new fadd function
         """
+        if fadd is not None and self._fremove is not None and self._fremove.__name__ != fadd.__name__:
+            raise AttributeError("add function name provided '%s' does not match with remove function name %s" % (fadd.__name__,self._fremove.__name__))
+
         self._fadd = fadd
         return self
 
@@ -173,6 +180,9 @@ class event:
         Return:
             event: Current instance with the new fremove function
         """
+        if fremove is not None and self._fadd is not None and self._fadd.__name__ != fremove.__name__:
+            raise AttributeError("remove function '%s'and add function '%s' name missmatch, both members must have same name" % (fremove.__name__,self._fadd.__name__))
+
         self._fremove = fremove
         return self
     
@@ -189,8 +199,16 @@ class event:
             Event: Event value stored in the descriptor.
         """
 
-        if self._fremove is None:
-            raise NotImplementedError("The event %s is being use without a remove (@%s.remove) definition on %s"% (self._fadd.__name__,self._fadd.__name__,owner) )  
+        if self._fadd is None or self._fremove is None:
+            error_message = ""
+
+            if self._fadd is None and self._fremove is None:
+                error_message = "event in %s is not defining any function (add/remove)" % owner
+            else:
+                function_info= (self._fremove,"add") if self._fadd is None else (self._fadd,"remove") 
+                error_message = "event %s does not have '%s' function assigned in %s" % (function_info[0].__name__,function_info[1],owner)
+            
+            raise NotImplementedError(error_message) 
 
         if self._proxy is None or self._proxy._instance != instance:
             self._proxy = self.Event(instance, self)
