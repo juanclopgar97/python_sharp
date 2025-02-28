@@ -453,9 +453,6 @@ class staticproperty:
         Return:
             staticproperty: Current instance 
         """
-        if fget is not None and self._fset is not None and self._fset.__name__ != fget.__name__:
-            raise AttributeError("getter function '%s'and setter function '%s' name missmatch, both members must have same name" % (fget.__name__,self._fset.__name__))
-
         self._fget = fget
         return self
 
@@ -468,9 +465,6 @@ class staticproperty:
         Return:
             staticproperty: Current instance 
         """
-        if fset is not None and self._fget is not None and self._fget.__name__ != fset.__name__:
-            raise AttributeError("setter function '%s'and getter function '%s' name missmatch, both members must have same name" % (fset.__name__,self._fget.__name__))
-
         self._fset = fset
         return self
 
