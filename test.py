@@ -79,7 +79,7 @@ class LocationChangingEventArgs(CancellableEventArg):
 
 class Person:
 
-    instance_created:int = 0
+    _instance_created:int = 0
     _personCreatedcallbacks:Delegate = Delegate()
 
     _name:str
@@ -132,6 +132,15 @@ class Person:
             self._location = value
             self._OnLocationChanged(LocationChangedEventArgs(self.Location - previous))
 
+
+    @staticproperty
+    def InstanceCreated()->int:
+        return Person._instance_created
+    
+    @InstanceCreated.setter
+    def InstanceCreated(value:int)->None:
+        Person._instance_created = value
+
 # endregion
 
 # region  Methods
@@ -150,7 +159,7 @@ class Person:
 
     @staticmethod
     def _OnPersonCreated(e:EventArgs)->None:
-        Person.instance_created +=1
+        Person.InstanceCreated +=1
         Person._personCreatedcallbacks(None,e)
 
     def Kill(self)->None:
@@ -307,7 +316,7 @@ person.Kill() #We kill the person :( (school will do its logic due its principal
 
 #Static event example
 def person_created_callback(sender:object,e:EventArgs):
-    print("Static callback works! person count:%d"%Person.instance_created)
+    print("Static callback works! person count:%d"% Person.InstanceCreated)
 
 proxy = Person.PersonCreated 
 proxy += person_created_callback

@@ -167,7 +167,7 @@ class BaseEvent(ABC):
             event: Current instance with the new fadd function
         """
         if fadd is not None and self._fremove is not None and self._fremove.__name__ != fadd.__name__:
-            raise AttributeError("add function name provided '%s' does not match with remove function name %s" % (fadd.__name__,self._fremove.__name__))
+            raise AttributeError("add function '%s'and remove function '%s' name missmatch, both members must have same name" % (fadd.__name__,self._fremove.__name__))
 
         self._fadd = fadd
         return self
@@ -188,20 +188,20 @@ class BaseEvent(ABC):
         return self
     
     @abstractmethod
-    def _get_proxy(self, instance: object, owner: type) -> Any:
+    def _get_proxy(self, instance: Any, owner: type) -> Any:
         pass
 
-    def __get__(self, instance:object, owner:type)->object:
+    def __get__(self, instance:Any, owner:type)->Any:
         """
         Method to get descriptor value.
 
         Parameters:
-            instance (object): The instance of the owning class. This parameter
+            instance (Any): The instance of the owning class. This parameter
                 is `None` when accessed from the class instead of from the instance.
             owner (type): The type of the owning class.
 
         Return:
-            Event: Event value stored in the descriptor.
+            Any: Descriptor proxy.
         """
 
         if self._fadd is None or self._fremove is None:
@@ -297,5 +297,43 @@ class staticevent(BaseEvent):
             self._proxy = staticevent.StaticEvent(self)
         return self._proxy
 
-#staticproperty
+
+class staticproperty:
+
+    _fget:Callable[[], Any] | None
+    _fset:Callable[[Any], Any] | None
+
+    def __init__(self, fget:Callable[[], Any] | None = None,fset:Callable[[Any], Any] | None = None)->None:
+        self._fget = None
+        self._fset = None
+
+        self.getter(fget)
+        self.setter(fset)
+
+    def __get__(self, instance:Any, owner:type)->Any:
+        if self._fget is None:
+            raise AttributeError("No getter defined for this static property")
+
+        return self._fget()
+
+    def __set__(self, instance:Any, value:Any)->None:
+        if self._fset is None:
+            raise AttributeError("No setter defined for this static property")
+        
+        self._fset(value)
+
+
+    def getter(self, fget):
+        if fget is not None and self._fset is not None and self._fset.__name__ != fget.__name__:
+            raise AttributeError("getter function '%s'and setter function '%s' name missmatch, both members must have same name" % (fget.__name__,self._fset.__name__))
+
+        self._fget = fget
+        return self
+
+    def setter(self, fset):
+        if fset is not None and self._fget is not None and self._fget.__name__ != fset.__name__:
+            raise AttributeError("setter function '%s'and getter function '%s' name missmatch, both members must have same name" % (fset.__name__,self._fget.__name__))
+
+        self._fset = fset
+        return self
 
