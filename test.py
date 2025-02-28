@@ -264,6 +264,10 @@ class School:
         print("School %s is sad because principal %s die" % (self.Name,sender.Name))
 
 
+    def method(self,sender:object,e:EventArgs)->None:
+        print("this is a method")
+
+
 def callback_function(sender:object,e:EventArgs)->None:
     print("callback sender %s, Eventargs: %s" % (sender,e))
     print("Person name %s" % sender.Name)
@@ -294,7 +298,7 @@ person.LocationChanged -= school.person_locationchanged#unsuscribe to the event
 person.Location = Point(30,30)#changing again the location to verify nothing happens
 #----------------------------------------------------------------------------------------------------------------------------------------
 
-#Use of a custom Eventargs with setter (allows to susscriber send information) in this case is implemented as a pre-event (triggers before something happens) this allows in this case cancel the Change of the person's location
+#Use of a custom Eventargs with setter (allows to suscriber send information) in this case is implemented as a pre-event (triggers before something happens) this allows in this case cancel the Change of the person's location
 person.LocationChanging += school.person_locationchanging #add the suscriber
 person.Location = Point(13,13) #change the location to trigger the event
 person.Location = Point(115,2) #changing location again to trigger the event, suscriber has the capability to cancel the asignation of the new value
@@ -303,8 +307,8 @@ print("%s location at %s" %(person.Name, person.Location))#checking person's loc
 
 
 #suscribing a Delegate instead of passing a function/method directly (Due Delegates are callables) to an event, as well show case of using polimorfism, pasing an EventArgs parameter function to a LocationEventArgs parameter event
-delegate = Delegate(callback_function) #create a delagate with one function with signature  Callable[[object, EventArgs], None]
-person.LocationChanged += delegate #suscribing a   Callable[[object, EventArgs], None] to Callable[[object, LocationChangedEventArgs], None] event
+delegate = Delegate(callback_function) #create a delagate with one function with signature Callable[[object, EventArgs], None]
+person.LocationChanged += delegate #suscribing a Callable[[object, EventArgs], None] to Callable[[object, LocationChangedEventArgs], None] event
 person.Location = Point(1,1)#changing location to trigger event 
 #in this case the event will provide an LocationChangedEventArgs instance to the suscriber (the 'e' parameter), and suscriber handle the object as an EventArgs instance, by polimorfism is ok
 #-----------------------------------------------------------------------------------------------------------------------------------------
@@ -314,11 +318,12 @@ school.Principal = person #Asign a principal to the school, the school will unsu
 person.Kill() #We kill the person :( (school will do its logic due its principal dies)
 #------------------------------------------------------------------------------------------------------------------------------------------
 
-#Static event example
+#Static event example executing functions or methods
 def person_created_callback(sender:object,e:EventArgs):
     print("Static callback works! person count:%d"% Person.InstanceCreated)
 
-proxy = Person.PersonCreated 
-proxy += person_created_callback
+
+Person.PersonCreated += person_created_callback
+Person.PersonCreated += school.method
 
 person2 = Person("")
