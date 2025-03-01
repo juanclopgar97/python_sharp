@@ -71,7 +71,7 @@ class Delegate(Generic[T]):
         for callable in self._callables:
             results.append(callable( *args, **kwds))
 
-        return results
+        return tuple(results)
     
 
 class EventArgs:
