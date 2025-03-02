@@ -143,22 +143,86 @@ Events can be implemented as members of an instance or a class (static events) o
 
   An example to clarify this could be an event called "WindowClosing", this event will notify that a window is about to close, the subscribers will have the power to pass information through the event arguments to cancel   the action, this is really useful if the changes in the app are not saved.
 
+  This might sound a little bit confusing at the begining but in fact, is not once you see an example and apply one. 
+
+<br/>
+
 #### EventArgs, CustomEventArgs and CancellableEventArgs class
+
+<br/>
 
 *EventArgs* class is an empty class designed to be a base class for the event arguments (extra information of the event) that are going to be passed from the publisher to the subscriber.
 
-**Simple events** use *EventArgs* objects to pass the event arguments to the subscriber, due *EventArgs* is an empty class, no arguments are passed to the subscriber, this is the reason why these events are the simplest to implement and the ones used for *property changed* events, they only notify an specific property change and that is it. Worth mentioning *property changed* events are not the only use for these event types, it is just a use case example
+-  **Simple events** use *EventArgs* objects to pass the event arguments to the subscriber, due *EventArgs* is an empty class, no arguments are passed to the subscriber, this is the reason why these events are the simplest to implement and the ones used for *property changed* events, they only notify an specific property change and that is it. Worth mentioning *property changed* events are not the only use for these event types, it is just a use case example
 
-**Events with arguments** use a custom class that inherit from *EventArgs* class to describe what arguments are going to be passed to the subscriber, the arguments passed to the subscriber are passed as read_only properties (properties with only getter). In this way if the event is a little bit more complex and a **simple event** is not enough, you can use a custom EventArgs that contain your information. As a use case example imagine an event called *Moved*, this event notifies when the object moves, but maybe only notify the movement is not enough and we want to inform how much the object moves, this is a perfect use for our custom *EventArgs* class:
+-  **Events with arguments** use a custom class that inherit from *EventArgs* class to describe what arguments are going to be passed to the subscriber, the arguments passed to the subscriber are passed as read_only properties (properties with only getter). In this way if the event is a little bit more complex and a **simple event** is not enough, you can use a custom EventArgs that contain your information. As a use case example imagine an event called *Moved*, this event notifies when the object moves, but maybe only notify the movement is not enough and we want to inform how much the object moves, this is a perfect use for our custom *EventArgs* class:
 
+```python
+class Vector:
+    '''
+    designed to describe a distance in 2 dimensions
+    '''
+    _i:int
+    _j:int
+
+    def __init__(self,i:int,j:int)->None:
+        self._i =i
+        self._j =j 
+
+    @property
+    def I(self)->int:
+        return self._i
+    
+    @property
+    def J(self)->int:
+        return self._j 
+
+    def __str__(self)->str:
+        return "%d i, %d j" % (self.I,self.J)
+
+
+
+class MovedEventArgs(EventArgs): # example of Custom EventArgs to pass event information (distance moved in this case)
+    
+    _delta:Vector
+
+    def __init__(self,delta:Vector)->None: # Request the distance of the movement
+        super().__init__()
+        self._delta = delta # Save the distance
+
+    @property
+    def Delta(self)->Vector: #encapsulate the value and placing its getter
+        return self._delta
 ```
 
+- **Events with modifiable arguments** use a custom class that inherit from *EventArgs* class to describe what arguments are going to be passed from the subscriber to the publisher, this module already include one example of this aproach *CancellableEventargs*:
+
+```python
+
+class CancellableEventArgs(EventArgs):
+
+    _cancel:bool
+
+    def __init__(self)->None:
+        super().__init__()
+        self._cancel = False 
+
+    
+    @property
+    def Cancel(self)->bool: #to show the value of _cancel attribute
+        return self._cancel
+    
+    @Cancel.setter
+    def Cancel(self,value:bool)->None: #to let the subscriber set a value into _cancel
+        self._cancel = value
 ```
+
+as you can see, this implementation is really similar to **Events with arguments**, the only difference is we are placing a setter method to let modify the cancel value, this value can be used for the publisher at the end of the exectution of all the callbacks stored.
 
 
 
   
-  This might sound a little bit confusing at the begining but in fact, is not once you see an example and apply one. 
+  
 
   ### Static properties
 
