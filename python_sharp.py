@@ -81,9 +81,9 @@ class EventArgs:
     pass
 
 
-class CancellableEventArg(EventArgs):
+class CancellableEventArgs(EventArgs):
     """
-    CancellableEventArg is a class that represents an EventArg that implements the posibility of cancelling the upcomming event setting the property Cancel to 'True'.
+    CancellableEventArgs is a class that represents an EventArg that implements the posibility of cancelling the upcomming event setting the property Cancel to 'True'.
 
     Attributes:
         _cancel (bool): Contains the value if the action advertise by the pre-event should continue or not.
@@ -92,7 +92,7 @@ class CancellableEventArg(EventArgs):
 
     def __init__(self)->None:
         """
-        CancellableEventArg constructor.
+        CancellableEventArgs constructor.
 
         Return:
             None
