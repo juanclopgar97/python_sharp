@@ -221,6 +221,7 @@ as you can see, this implementation is really similar to **Events with arguments
 
 #### Implementation
 
+Below this text, the use cases and explanation about the events are shown, please read the examples and then READ THE END OF THIS SECTION, this is really important because the end of the section explains the "WHY" of some "dateils" in the code below, that information is not shown in the code comments in order to provide an easy big picture and provide context before the FULL EXPLANATION.   
 
 - **Simple events**
 
