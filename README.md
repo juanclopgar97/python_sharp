@@ -219,9 +219,52 @@ class CancellableEventArgs(EventArgs):
 
 as you can see, this implementation is really similar to **Events with arguments**, the only difference is we are placing a setter method to let modify the cancel value, this value can be used for the publisher at the end of the exectution of all the callbacks stored.
 
+#### Implementation
 
 
-  
+- **Simple events**
+
+```python
+from python_sharp import *
+
+class Person: #class that is going to implement an event
+
+  def __init__(self, name): # we request a name for the person
+    self._name = name # store the name
+    self._namechanged_callbacks = Delegate() # we create a delegate to store callables
+
+  @property # define a getter for name
+  def Name(self):
+    return self._name
+
+  @Name.setter # define a setter for name
+  def Name(self,value):
+    self._name = value
+    self._OnNameChanged(EventArgs()) # We execute out internal logic (if any) when the name is changed
+
+  def _OnNameChanged(e:EventArgs): # define a method that execute necesarry code when the name change (if any)
+    # execute internal logic when the name change (if any)
+    self.self._namechanged_callbacks(self,e) #execute external logic # execute the callbacks stored in self._namechanged_callbacks
+
+  @event #define an adder for NameChanged (describes how a callable should be added into our delegate)
+  def NameChanged(self,value):
+    self._namechanged_callbacks += value # in this case there is no more logic than add the callable to the delegate
+
+  @NameChanged.remove #define an remover for NameChanged (describes how a callable should be removed from our delegate)
+  def NameChanged(self,value):
+    self._namechanged_callbacks += value
+
+def person_NameChanged(sender:object,e:EventArgs):
+  print("person change its name to %s" % sender.Name)
+
+person = Person("Juan") #creates a new person
+person += person_NameChanged # subscribe person_NameChanged into the NameChanged event. (person_NameChanged is our callable that is going to be added to a delegate, in order to know how to add it += operator will call the function under @event decorator and pass the callable as the parameter 'value') 
+person.Name = "Carlos" #Change the person Name, this will cause execute Name setter->_OnNamechanged->execute the delegate which contains "person_NameChanged" function printing the message
+person -= person_NameChanged #unsucribe the function, the operator -= wil cause execute the method under @NameChanged.remove decorator in order to know how a callable should be removed, person_NameChanged will be passed as 'value' parammeter
+person.Name = "Something" # As person_NameChanged is not subcribed to the event is not going to be executed.
+```
+
+(suggested signature and value parametter documentation)
   
 
   ### Static properties
