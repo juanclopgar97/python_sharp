@@ -240,9 +240,9 @@ class Person: #class that is going to implement an event
   @Name.setter # define a setter for name
   def Name(self,value):
     self._name = value
-    self._OnNameChanged(EventArgs()) # We execute out internal logic (if any) when the name is changed
+    self._OnNameChanged(EventArgs()) # We execute our logic when the name is changed ( _OnNameChanged require a EventArgs object, this is the way  _OnNameChanged unsures that the Name was actually changed, in other words, if the name change then show me evidence,proof or ARGUMENTS that that happened, in this case EventArgs is an empty object so we create the argument (instence of EventArgs) but we do not need to fill it, only send it 
 
-  def _OnNameChanged(e:EventArgs): # define a method that execute necesarry code when the name change (if any)
+  def _OnNameChanged(e:EventArgs): # define a method that execute necessary logic when the name change (if any)
     # execute internal logic when the name change (if any)
     self.self._namechanged_callbacks(self,e) #execute external logic # execute the callbacks stored in self._namechanged_callbacks
 
@@ -250,18 +250,18 @@ class Person: #class that is going to implement an event
   def NameChanged(self,value):
     self._namechanged_callbacks += value # in this case there is no more logic than add the callable to the delegate
 
-  @NameChanged.remove #define an remover for NameChanged (describes how a callable should be removed from our delegate)
+  @NameChanged.remove # define a remover for NameChanged (describes how a callable should be removed from our delegate)
   def NameChanged(self,value):
-    self._namechanged_callbacks += value
+    self._namechanged_callbacks -= value # in this case there is no more logic than remove the callable from the delegate
 
-def person_NameChanged(sender:object,e:EventArgs):
+def person_NameChanged(sender:object,e:EventArgs): # our subscriber or callback, this is the code we are interested to execute when the name change
   print("person change its name to %s" % sender.Name)
 
 person = Person("Juan") #creates a new person
-person += person_NameChanged # subscribe person_NameChanged into the NameChanged event. (person_NameChanged is our callable that is going to be added to a delegate, in order to know how to add it += operator will call the function under @event decorator and pass the callable as the parameter 'value') 
+person.NameChanged += person_NameChanged # subscribe person_NameChanged into the NameChanged event. (person_NameChanged is our callable that is going to be added to our delegate, in order to know how to add it, += operator will call the function under @event decorator and pass the callable (person_NameChanged) as the parameter 'value') 
 person.Name = "Carlos" #Change the person Name, this will cause execute Name setter->_OnNamechanged->execute the delegate which contains "person_NameChanged" function printing the message
-person -= person_NameChanged #unsucribe the function, the operator -= wil cause execute the method under @NameChanged.remove decorator in order to know how a callable should be removed, person_NameChanged will be passed as 'value' parammeter
-person.Name = "Something" # As person_NameChanged is not subcribed to the event is not going to be executed.
+person.NameChanged -= person_NameChanged #unsucribe the function, the operator -= will cause execute the method under @NameChanged.remove decorator in order to know how a callable should be removed, person_NameChanged will be passed as 'value' parameter
+person.Name = "Something" # As person_NameChanged is not subcribed to the event, it is not going to be executed.
 ```
 
 (suggested signature and value parametter documentation)
