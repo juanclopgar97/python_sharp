@@ -62,7 +62,7 @@ class LocationChangedEventArgs(EventArgs):
 
 
 
-class LocationChangingEventArgs(CancellableEventArg):
+class LocationChangingEventArgs(CancellableEventArgs):
     
     _location:Point
 
