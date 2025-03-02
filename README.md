@@ -242,9 +242,9 @@ class Person: #class that is going to implement an event
     self._name = value
     self._OnNameChanged(EventArgs()) # We execute our logic when the name is changed ( _OnNameChanged require a EventArgs object, this is the way  _OnNameChanged unsures that the Name was actually changed, in other words, if the name change then show me evidence,proof or ARGUMENTS that that happened, in this case EventArgs is an empty object so we create the argument (instence of EventArgs) but we do not need to fill it, only send it 
 
-  def _OnNameChanged(e:EventArgs): # define a method that execute necessary logic when the name change (if any)
+  def _OnNameChanged(self,e:EventArgs): # define a method that execute necessary logic when the name change (if any)
     # execute internal logic when the name change (if any)
-    self.self._namechanged_callbacks(self,e) #execute external logic # execute the callbacks stored in self._namechanged_callbacks
+    self._namechanged_callbacks(self,e) #execute external logic # execute the callbacks stored in self._namechanged_callbacks
 
   @event #define an adder for NameChanged (describes how a callable should be added into our delegate)
   def NameChanged(self,value):
