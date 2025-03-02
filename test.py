@@ -48,7 +48,7 @@ class Vector:
 
 
 
-class LocationChangedEventArgs(EventArgs):
+class MovedEventArgs(EventArgs):
     
     _delta:Vector
 
@@ -86,7 +86,7 @@ class Person:
     _alive:bool
     _location:Point
     _nameChangedcalbacks:Delegate
-    _locationChangedcallbacks:Delegate
+    _movedcallbacks:Delegate
     _locationChangingcallbacks:Delegate
     _diedcallbacks:Delegate
 
@@ -95,7 +95,7 @@ class Person:
         self._alive = True
         self._location = Point(0,0)
         self._nameChangedcalbacks = Delegate()
-        self._locationChangedcallbacks = Delegate()
+        self._movedcallbacks = Delegate()
         self._locationChangingcallbacks = Delegate()
         self._diedcallbacks = Delegate()
         Person._OnPersonCreated(EventArgs())
@@ -130,7 +130,7 @@ class Person:
         if(not locationEventArgs.Cancel):
             previous = self.Location 
             self._location = value
-            self._OnLocationChanged(LocationChangedEventArgs(self.Location - previous))
+            self._OnMoved(MovedEventArgs(self.Location - previous))
 
 
     @staticproperty
@@ -151,8 +151,8 @@ class Person:
     def _OnLocationChanging(self,e:LocationChangingEventArgs)->None:
         self._locationChangingcallbacks(self,e)
 
-    def _OnLocationChanged(self,e:LocationChangedEventArgs)->None:
-        self._locationChangedcallbacks(self,e)          
+    def _OnMoved(self,e:MovedEventArgs)->None:
+        self._movedcallbacks(self,e)          
         
     def _OnDied(self,e:EventArgs)->None:
         self._diedcallbacks(self,e)   
@@ -180,20 +180,20 @@ class Person:
 
 
     @event  #event with custom EventArgs, notify something happens and provides extra information (like why,how,when),  no recolection of information from suscribers
-    def LocationChanged(self,value:Callable[[object, LocationChangingEventArgs], None])->None:
-        self._locationChangedcallbacks += value
+    def Moved(self,value:Callable[[object, LocationChangingEventArgs], None])->None:
+        self._movedcallbacks += value
     
-    @LocationChanged.remove
-    def LocationChanged(self,value:Callable[[object, LocationChangingEventArgs], None])->None:
-       self._locationChangedcallbacks -= value  
+    @Moved.remove
+    def Moved(self,value:Callable[[object, LocationChangingEventArgs], None])->None:
+       self._movedcallbacks -= value  
 
 
     @event  #event with custom EventArgs, notify something happens provides extra information (like why,how,when), and it is capable of recolect info from its suscribers (this case implemeted as prevent)
-    def LocationChanging(self,value:Callable[[object, LocationChangedEventArgs], None])->None:
+    def LocationChanging(self,value:Callable[[object, MovedEventArgs], None])->None:
         self._locationChangingcallbacks += value
     
     @LocationChanging.remove
-    def LocationChanging(self,value:Callable[[object, LocationChangedEventArgs], None])->None:
+    def LocationChanging(self,value:Callable[[object, MovedEventArgs], None])->None:
        self._locationChangingcallbacks -= value
 
 
@@ -252,7 +252,7 @@ class School:
     def person_nameChanged(self,sender:object,e:EventArgs)->None:
         print("School %s just signed up %s"% (self.Name,sender.Name))
 
-    def person_locationchanged(self,sender:object,e:LocationChangedEventArgs)->None:
+    def person_moved(self,sender:object,e:MovedEventArgs)->None:
         print("Person %s change its localitation by %s units" % (sender.Name,e.Delta))
 
     def person_locationchanging(self,sender:object,e:LocationChangingEventArgs)->None:
@@ -292,9 +292,9 @@ person.Name = "Nos"#Change the person name to trigger the event
 
 #Use of an event with custom EventArgs---------------------------------------------------------------------------------------------------
 person.Location = Point(5,5)#changing location to show nothing happens
-person.LocationChanged += school.person_locationchanged#add a suscriber to the event
+person.Moved += school.person_moved#add a suscriber to the event
 person.Location = Point(15,15)#changing the location again to trigger the event
-person.LocationChanged -= school.person_locationchanged#unsuscribe to the event
+person.Moved -= school.person_moved#unsuscribe to the event
 person.Location = Point(30,30)#changing again the location to verify nothing happens
 #----------------------------------------------------------------------------------------------------------------------------------------
 
@@ -308,9 +308,9 @@ print("%s location at %s" %(person.Name, person.Location))#checking person's loc
 
 #suscribing a Delegate instead of passing a function/method directly (Due Delegates are callables) to an event, as well show case of using polimorfism, pasing an EventArgs parameter function to a LocationEventArgs parameter event
 delegate = Delegate(callback_function) #create a delagate with one function with signature Callable[[object, EventArgs], None]
-person.LocationChanged += delegate #suscribing a Callable[[object, EventArgs], None] to Callable[[object, LocationChangedEventArgs], None] event
+person.Moved += delegate #suscribing a Callable[[object, EventArgs], None] to Callable[[object, MovedEventArgs], None] event
 person.Location = Point(1,1)#changing location to trigger event 
-#in this case the event will provide an LocationChangedEventArgs instance to the suscriber (the 'e' parameter), and suscriber handle the object as an EventArgs instance, by polimorfism is ok
+#in this case the event will provide an MovedEventArgs instance to the suscriber (the 'e' parameter), and suscriber handle the object as an EventArgs instance, by polimorfism is ok
 #-----------------------------------------------------------------------------------------------------------------------------------------
 
 #suscribing the methods internally on the class-------------------------------------------------------------------------------------------
