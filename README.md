@@ -5,14 +5,14 @@
 
 ## Introduction
 
-python# (python sharp) module was created with the intention of adding EOP (event oriented programing) into python in the most native feeling, easy sintax way possible.
+python# (python sharp) module was created with the intention of adding EOP (event oriented programing) and some other features like static properties into python in the most native feeling, easy sintax way possible.
 
 This module was thought to accomplish EOP with 2 objetives in mind:
 
-1. functionalities (like events) should looks and feel like a native python feature.
+1. Features should looks and feel like a native python feature.
 2. Implementation should be based in another famous EOP language to decrease learning curve and improve user experience.
 
-Events are just another possible way to declare a class member like: fields/attributes, properties and methods, python already have a way to define a property with **@property**:
+Events are just another possible way to declare a class member like: fields/attributes, properties and methods, python already have a way to define a property with **@property**, this helps to define objective number 1, events should be implemented with **@event** sintax to be consistent with python.:
 
 ```python #5
 class Person:
@@ -20,28 +20,32 @@ class Person:
     self._name = name
 
   @property
-    def Name(self)->str: 
+  def Name(self)->str: 
         return self._name
 
   @Name.setter 
-    def Name(self,value:str)->None:
+  def Name(self,value:str)->None:
         self._name = value
-```
-this helps to define objective number 1, events should be implemented with **@event** sintax to be consistent with python.
 
-For objective 2 as the name spoils, the module is architected thinking in how another EOP language (in this case C#) implements its events, this implementation will be explain below, keep in mind this is a really simplified explanation of how C# events actually work, if you are interested in learn how it works exactly please go to its documentation, with this clarified, let's move on to the explanation: 
+  @event
+  def NameChanged(self,value):
+    #some implementation
+    pass
+```
+
+For objective 2, the module was architected thinking in how another EOP language (in this case C#) implements its events. This implementation will be explain below, keep in mind this is a really simplified explanation of how C# events actually work, if you are interested in learn how they work exactly please go to C# documentation. With this clarified, let's move on to the explanation: 
 
 1. C# implements events as a collection of callbacks that will be executed in some point of time, this collection of functions are called **Delegates**, invoking(executing) the delegate will cause the execution of all functions(callables) in its collection.
 
 2. delegates are not publicly expose commonly due security reasons, as the fields/attributes have to be encapsulated, delegates as well, and the way to encapsulate them is with events. fileds/attributes are to properties as delegates are to events.
 
-3. Properties encapsulate fields/attributes with 2 functions/methods called "get" and "set" functions/methods which define the logic and specify how data should be GET and SET out of the object, in C# events encapsulate delegates with 2 functions as well called "add" and "remove" functions which define the logic and specify how functions/suscribers should be added or removed out of the delegate.
+3. Properties encapsulate fields/attributes with 2 functions/methods called "get" and "set" functions/methods which define the logic and specify how data should be GET and SET out of the object, in C# events encapsulate delegates with 2 functions as well called "add" and "remove" functions which define the logic and specify how functions/subscribers should be added or removed out of the delegate.
 
 With these 2 objetives explained and the basic module introduction finished, lets jump into the use cases!
 
 ## Use cases and examples:
 
-In this repository there are 2 main files "python_sharp.py" (which is the module file) and "test.py" this last file contains all the features applied in one single script, this could be really usefull if you want to do a quick check about how something is implmented. However, due it is a "testing" script and not a "walk through" it could be confusing if you do not know what is going on, so is **Highly recommended** read the below part of the document which explains step by step how to implement every single feature in the module.
+In this repository there are 2 main files "python_sharp.py" (which is the module file) and "test.py", this last file contains all the features applied in one single script, this could be really usefull if you want to do a quick check about how something is implemented. However, due it is a "testing" script and not a "walk through" it could be confusing if you do not know what is going on, so it is **Highly recommended** read the below part of the document which explains step by step how to implement every single feature in the module.
 
 ### Delegates
 
@@ -128,19 +132,33 @@ As summary, Delegates are really usefull to execute a bulk of callables, and its
 Events can be implemented as members of an instance or a class (static events) on different flavors, we can group this flavors into 3 main implementations:
 
 1. **Simple events** (Normally implemented as *property changed* events):
-  This events only "notify" that something relevant happens, they no provide extra information about the event like: How, When, Why etc
+  This events only "notify" that something relevant happens, they do not provide extra information about the event like: How, When, Why etc
 
 2. **Events with arguments**:
-  This events are like the previous one but they are more complete, they provide extra information about the event like: How, When, Why etc, to the suscribers through a parameter
+  This events are like the previous one but they are capable of provide extra information about the event like: How, When, Why etc, to the subscribers through a parameter (Normally a custom 'EventArgs' type called 'e')
 
 3. **Events with modifiable arguments** (Normally implemented as *pre-events*)
-  This events are like the one in the point number 2, but now the arguments are not only *read_only* arguments, on point 2, event arguments are *read_only* arguments because the arguments are information passed from         the publisher (object that implement the event) to subscribers (object that is interested to be notified) so there is no reason to let the subscrtiber change that information. However the events described on this
-  point (point 3) can contain editable arguments, this arguments doesn't provide information about the event, but rather they act like a channel to let the subcriber set and pass information to the publisher.
+  This events are like the one in the point number 2, but now the arguments are not only *read_only* arguments, on point 2, event arguments are *read_only* arguments because the arguments are information passed from         the publisher (object that implement the event) to subscribers (object that is interested to be notified) so there is no reason to let the subscriber change that information. However the events described on this
+  point (point 3) can contain editable arguments, this arguments are not designed to provide information about the event, but rather they act like a channel to let the subcriber set and pass information to the publisher.
 
-  An example to clarify this could be an event called "WindowClosing", this event will notify that a window is about to close, the suscribers will have the power to pass information through the event arguments to cancel     the action, this is really useful if the changes in the app are not saved.
+  An example to clarify this could be an event called "WindowClosing", this event will notify that a window is about to close, the subscribers will have the power to pass information through the event arguments to cancel   the action, this is really useful if the changes in the app are not saved.
+
+#### EventArgs, CustomEventArgs and CancellableEventArgs class
+
+*EventArgs* class is an empty class designed to be a base class for the event arguments (extra information of the event) that are going to be passed from the publisher to the subscriber.
+
+**Simple events** use *EventArgs* objects to pass the event arguments to the subscriber, due *EventArgs* is an empty class, no arguments are passed to the subscriber, this is the reason why these events are the simplest to implement and the ones used for *property changed* events, they only notify an specific property change and that is it. Worth mentioning *property changed* events are not the only use for these event types, it is just a use case example
+
+**Events with arguments** use a custom class that inherit from *EventArgs* class to describe what arguments are going to be passed to the subscriber, the arguments passed to the subscriber are passed as read_only properties (properties with only getter). In this way if the event is a little bit more complex and a **simple event** is not enough, you can use a custom EventArgs that contain your information. As a use case example imagine an event called *Moved*, this event notifies when the object moves, but maybe only notify the movement is not enough and we want to inform how much the object moves, this is a perfect use for our custom *EventArgs* class:
+
+```
+
+```
+
+
 
   
-  This might sound confusing at the begining but in fact is not once you see an example and apply one. 
+  This might sound a little bit confusing at the begining but in fact, is not once you see an example and apply one. 
 
   ### Static properties
 
