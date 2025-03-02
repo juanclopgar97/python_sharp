@@ -158,40 +158,16 @@ Events can be implemented as members of an instance or a class (static events) o
 -  **Events with arguments** use a custom class that inherit from *EventArgs* class to describe what arguments are going to be passed to the subscriber, the arguments passed to the subscriber are passed as read_only properties (properties with only getter). In this way if the event is a little bit more complex and a **simple event** is not enough, you can use a custom EventArgs that contain your information. As a use case example imagine an event called *Moved*, this event notifies when the object moves, but maybe only notify the movement is not enough and we want to inform how much the object moves, this is a perfect use for our custom *EventArgs* class:
 
 ```python
-class Vector:
-    '''
-    designed to describe a distance in 2 dimensions
-    '''
-    _i:int
-    _j:int
-
-    def __init__(self,i:int,j:int)->None:
-        self._i =i
-        self._j =j 
-
-    @property
-    def I(self)->int:
-        return self._i
-    
-    @property
-    def J(self)->int:
-        return self._j 
-
-    def __str__(self)->str:
-        return "%d i, %d j" % (self.I,self.J)
-
-
-
 class MovedEventArgs(EventArgs): # example of Custom EventArgs to pass event information (distance moved in this case)
     
-    _delta:Vector
+    _delta:int
 
-    def __init__(self,delta:Vector)->None: # Request the distance of the movement
+    def __init__(self,delta:int)->None: # Request the distance of the movement
         super().__init__()
         self._delta = delta # Save the distance
 
     @property
-    def Delta(self)->Vector: #encapsulate the value and placing its getter
+    def Delta(self)->int: #encapsulate the value and placing its getter
         return self._delta
 ```
 
