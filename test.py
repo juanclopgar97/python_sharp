@@ -1,77 +1,30 @@
 from python_sharp import *
 
-class Point:
-
-    _x:int
-    _y:int
-
-    def __init__(self,x:int,y:int)->None:
-        self._x = x
-        self._y = y 
-
-    @property
-    def X(self)->int:
-        return self._x
-    
-    @property
-    def Y(self)->int:
-        return self._y
-
-    def __sub__(self,value:"Point") ->"Vector":
-        if isinstance(value, Point):
-            return Vector(self.X - value.X, self.Y - value.Y)
-        return NotImplemented
-
-    def __str__(self)->str:
-        return "(%d, %d)" % (self.X,self.Y)
-    
-
-class Vector:
-
-    _i:int
-    _j:int
-
-    def __init__(self,i:int,j:int)->None:
-        self._i =i
-        self._j =j 
-
-    @property
-    def I(self)->int:
-        return self._i
-    
-    @property
-    def J(self)->int:
-        return self._j 
-
-    def __str__(self)->str:
-        return "%d i, %d j" % (self.I,self.J)
-
 
 
 class MovedEventArgs(EventArgs):
     
-    _delta:Vector
+    _delta:int
 
-    def __init__(self,delta:Vector)->None:
+    def __init__(self,delta:int)->None:
         super().__init__()
         self._delta = delta
 
     @property
-    def Delta(self)->Vector:
+    def Delta(self)->int:
         return self._delta
-
 
 
 class LocationChangingEventArgs(CancellableEventArgs):
     
-    _location:Point
+    _location:int
 
-    def __init__(self,location:Point)->None:
+    def __init__(self,location:int)->None:
         super().__init__()
         self._location = location
 
     @property
-    def Location(self)->Vector:
+    def Location(self)->int:
         return self._location
 
 
@@ -84,7 +37,7 @@ class Person:
 
     _name:str
     _alive:bool
-    _location:Point
+    _location:int
     _nameChangedcalbacks:Delegate
     _movedcallbacks:Delegate
     _locationChangingcallbacks:Delegate
@@ -93,7 +46,7 @@ class Person:
     def __init__(self,name:str)->None:
         self._name = name
         self._alive = True
-        self._location = Point(0,0)
+        self._location =0
         self._nameChangedcalbacks = Delegate()
         self._movedcallbacks = Delegate()
         self._locationChangingcallbacks = Delegate()
@@ -118,11 +71,11 @@ class Person:
     
 
     @property
-    def Location(self)->Point:
+    def Location(self)->int:
         return self._location
     
     @Location.setter
-    def Location(self,value:Point)->None:
+    def Location(self,value:int)->None:
         
         locationEventArgs = LocationChangingEventArgs(value)
         self._OnLocationChanging(locationEventArgs)
@@ -256,8 +209,8 @@ class School:
         print("Person %s change its localitation by %s units" % (sender.Name,e.Delta))
 
     def person_locationchanging(self,sender:object,e:LocationChangingEventArgs)->None:
-        if e.Location.X > 100:
-            print("Person %s can't be changed that far, 'X can't be greater than 100. value: %d'" % (sender.Name,e.Location.X))
+        if e.Location > 100:
+            print("Person %s can't be changed that far, Location cannot be greater than 100. value: %d'" % (sender.Name,e.Location))
             e.Cancel = True
 
     def _person_died(self,sender:object,e:EventArgs):
@@ -291,17 +244,17 @@ person.Name = "Nos"#Change the person name to trigger the event
 #----------------------------------------------------------------------------------------------------------------------------------------
 
 #Use of an event with custom EventArgs---------------------------------------------------------------------------------------------------
-person.Location = Point(5,5)#changing location to show nothing happens
+person.Location =5#changing location to show nothing happens
 person.Moved += school.person_moved#add a suscriber to the event
-person.Location = Point(15,15)#changing the location again to trigger the event
+person.Location = 15#changing the location again to trigger the event
 person.Moved -= school.person_moved#unsuscribe to the event
-person.Location = Point(30,30)#changing again the location to verify nothing happens
+person.Location = 30#changing again the location to verify nothing happens
 #----------------------------------------------------------------------------------------------------------------------------------------
 
 #Use of a custom Eventargs with setter (allows to suscriber send information) in this case is implemented as a pre-event (triggers before something happens) this allows in this case cancel the Change of the person's location
 person.LocationChanging += school.person_locationchanging #add the suscriber
-person.Location = Point(13,13) #change the location to trigger the event
-person.Location = Point(115,2) #changing location again to trigger the event, suscriber has the capability to cancel the asignation of the new value
+person.Location = 13 #change the location to trigger the event
+person.Location = 115 #changing location again to trigger the event, suscriber has the capability to cancel the asignation of the new value
 print("%s location at %s" %(person.Name, person.Location))#checking person's location it is (13,13) due suscriber cancel the asignation of the action thorugh the pre-event
 #----------------------------------------------------------------------------------------------------------------------------------------
 
@@ -309,7 +262,7 @@ print("%s location at %s" %(person.Name, person.Location))#checking person's loc
 #suscribing a Delegate instead of passing a function/method directly (Due Delegates are callables) to an event, as well show case of using polimorfism, pasing an EventArgs parameter function to a LocationEventArgs parameter event
 delegate = Delegate(callback_function) #create a delagate with one function with signature Callable[[object, EventArgs], None]
 person.Moved += delegate #suscribing a Callable[[object, EventArgs], None] to Callable[[object, MovedEventArgs], None] event
-person.Location = Point(1,1)#changing location to trigger event 
+person.Location = 1#changing location to trigger event 
 #in this case the event will provide an MovedEventArgs instance to the suscriber (the 'e' parameter), and suscriber handle the object as an EventArgs instance, by polimorfism is ok
 #-----------------------------------------------------------------------------------------------------------------------------------------
 
