@@ -241,6 +241,64 @@ person.NameChanged -= person_NameChanged #unsucribe the function, the operator -
 person.Name = "Something" # As person_NameChanged is not subcribed to the event, it is not going to be executed.
 ```
 
+
+```python
+from python_sharp import *
+from typing import Callable
+
+class MovedEventArgs(EventArgs):
+    
+    _delta:int
+
+    def __init__(self,delta:int)->None:
+        super().__init__()
+        self._delta = delta
+
+    @property
+    def Delta(self)->int:
+        return self._delta
+
+class Person:
+
+    def __init__(self,name:str)->None:
+        self._location = 0
+        self._movedcallbacks = Delegate()
+
+    @property
+    def Location(self)->int:
+        return self._location
+
+    @Location.setter
+    def Location(self,value:int)->None:      
+        previous = self.Location 
+        self._location = value
+        self._OnMoved(MovedEventArgs(self.Location - previous))
+
+    def Move(self,distance:int):
+        self.Location += distance
+
+    def _OnMoved(self,e:MovedEventArgs)->None:
+        self._movedcallbacks(self,e)
+
+    @event 
+    def Moved(self,value:Callable[[object, MovedEventArgs], None])->None:
+        self._movedcallbacks += value
+    
+    @Moved.remove
+    def Moved(self,value:Callable[[object, MovedEventArgs], None])->None:
+       self._movedcallbacks -= value  
+
+def person_moved(sender:object,e:MovedEventArgs)->None:
+  print("Person moves %d units" % e.Delta)
+
+person = Person("Carlos")
+person.Moved += person_moved
+person.Move(15)
+person.Moved -= person_moved
+person.Location = 0
+```
+
+
 (suggested signature and value parametter documentation)
   
 
