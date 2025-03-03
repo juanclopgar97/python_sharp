@@ -46,7 +46,7 @@ class Person:
     def __init__(self,name:str)->None:
         self._name = name
         self._alive = True
-        self._location =0
+        self._location = 0
         self._nameChangedcalbacks = Delegate()
         self._movedcallbacks = Delegate()
         self._locationChangingcallbacks = Delegate()
@@ -136,20 +136,20 @@ class Person:
 
 
     @event  #event with custom EventArgs, notify something happens and provides extra information (like why,how,when),  no recolection of information from suscribers
-    def Moved(self,value:Callable[[object, LocationChangingEventArgs], None])->None:
+    def Moved(self,value:Callable[[object, MovedEventArgs], None])->None:
         self._movedcallbacks += value
     
     @Moved.remove
-    def Moved(self,value:Callable[[object, LocationChangingEventArgs], None])->None:
+    def Moved(self,value:Callable[[object, MovedEventArgs], None])->None:
        self._movedcallbacks -= value  
 
 
     @event  #event with custom EventArgs, notify something happens provides extra information (like why,how,when), and it is capable of recolect info from its suscribers (this case implemeted as prevent)
-    def LocationChanging(self,value:Callable[[object, MovedEventArgs], None])->None:
+    def LocationChanging(self,value:Callable[[object, LocationChangingEventArgs], None])->None:
         self._locationChangingcallbacks += value
     
     @LocationChanging.remove
-    def LocationChanging(self,value:Callable[[object, MovedEventArgs], None])->None:
+    def LocationChanging(self,value:Callable[[object, LocationChangingEventArgs], None])->None:
        self._locationChangingcallbacks -= value
 
 
