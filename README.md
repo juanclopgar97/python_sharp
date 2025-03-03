@@ -292,8 +292,9 @@ def person_moved(sender:object,e:MovedEventArgs)->None:
   print("Person moves %d units" % e.Delta)
 
 person = Person("Carlos")
-person.Moved += person_moved
 person.Move(15)
+person.Moved += person_moved
+person.Location = 25
 person.Moved -= person_moved
 person.Location = 0
 ```
