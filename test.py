@@ -110,7 +110,7 @@ class Person:
     def _OnDied(self,e:EventArgs)->None:
         self._diedcallbacks(self,e)   
 
-    def Move(self,distance:int):
+    def Move(self,distance:int)->None:
         self.Location += distance
 
     @staticmethod

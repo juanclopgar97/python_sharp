@@ -274,7 +274,7 @@ class Person:
         self._location = value
         self._OnMoved(MovedEventArgs(self.Location - previous))
 
-    def Move(self,distance:int):
+    def Move(self,distance:int)->None:
         self.Location += distance
 
     def _OnMoved(self,e:MovedEventArgs)->None:
