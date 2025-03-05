@@ -1,7 +1,14 @@
-<img src="https://github.com/juanclopgar97/python_sharp/blob/master/documentation_images/python_sharp.png" width="300">
+<!--img src="https://github.com/juanclopgar97/python_sharp/blob/master/documentation_images/python_sharp.png" width="300"-->
+<img src="./documentation_images/python_sharp.png" width="300">
 
 # Python# (Python sharp)
 
+## Table of Contents
+1. [Introduction](#Introduction)
+2. [Installation](#Installation)
+3. [Use cases and examples](#Use-cases-and-examples)
+    1. [Delegates](#Delegates)
+    2. [Events](#Events)
 
 ## Introduction
 
@@ -42,6 +49,10 @@ For objective 2, the module was architected thinking in how another EOP language
 3. Properties encapsulate fields/attributes with 2 functions/methods called "get" and "set" functions/methods which define the logic and specify how data should be GET and SET out of the object, in C# events encapsulate delegates with 2 functions as well called "add" and "remove" functions which define the logic and specify how functions/subscribers should be added or removed out of the delegate.
 
 With these 2 objetives explained and the basic module introduction finished, lets jump into the use cases!
+
+## Installation
+
+(To be documented, from downloading this repo to downloading from Pypi)
 
 ## Use cases and examples:
 
@@ -260,7 +271,7 @@ class MovedEventArgs(EventArgs):
 
 class Person:
 
-    def __init__(self,name:str)->None:
+    def __init__(self)->None:
         self._location = 0
         self._movedcallbacks = Delegate()
 
@@ -288,10 +299,10 @@ class Person:
     def Moved(self,value:Callable[[object, MovedEventArgs], None])->None:
        self._movedcallbacks -= value  
 
-def person_moved(sender:object,e:MovedEventArgs)->None:
+def person_Moved(sender:object,e:MovedEventArgs)->None:
   print("Person moves %d units" % e.Delta)
 
-person = Person("Carlos")
+person = Person()
 person.Move(15)
 person.Moved += person_moved
 person.Location = 25
@@ -299,6 +310,66 @@ person.Moved -= person_moved
 person.Location = 0
 ```
 
+```python
+from python_sharp import *
+from typing import Callable
+
+class LocationChangingEventArgs(CancellableEventArgs):
+    
+    _value:int
+
+    def __init__(self,value:int)->None:
+        super().__init__()
+        self._value = value
+
+    @property
+    def Value(self)->int:
+        return self._value
+
+class Person:
+
+  def __init__(self)->None:
+    self._location = 0
+    self._locationChangingcallbacks = Delegate()
+
+    @property
+    def Location(self)->int:
+        return self._location
+    
+    @Location.setter
+    def Location(self,value:int)->None:
+        
+        locationEventArgs = LocationChangingEventArgs(value)
+        self._OnLocationChanging(locationEventArgs)
+        
+        if(not locationEventArgs.Cancel):
+            self._location = value
+
+
+    def _OnLocationChanging(self,e:LocationChangingEventArgs)->None:
+        self._locationChangingcallbacks(self,e)
+
+
+    @event
+    def LocationChanging(self,value:Callable[[object, LocationChangingEventArgs], None])->None:
+        self._locationChangingcallbacks += value
+    
+    @LocationChanging.remove
+    def LocationChanging(self,value:Callable[[object, LocationChangingEventArgs], None])->None:
+       self._locationChangingcallbacks -= value
+
+
+def person_LocationChanging(sender:object,e:LocationChangingEventArgs):
+  if e.Value > 100:
+    e.Cancel = True
+
+person = Person()
+person.Location = 50
+person.LocationChanging += person_LocationChanging
+person.Location = 150
+print(person.Location)
+
+```
 
 (suggested signature and value parametter documentation)
   
