@@ -374,6 +374,4 @@ print(person.Location)
 (suggested signature and value parametter documentation)
   
 
-  ### Static properties
-
   
