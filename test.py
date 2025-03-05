@@ -86,12 +86,12 @@ class Person:
             self._OnMoved(MovedEventArgs(self.Location - previous))
 
 
-    @staticproperty
-    def InstanceCreated()->int:
+    @staticmethod
+    def get_InstanceCreated()->int:
         return Person._instance_created
     
-    @InstanceCreated.setter
-    def _InstanceCreated(value:int)->None:
+    @staticmethod
+    def _set_InstanceCreated(value:int)->None:
         Person._instance_created = value
 
 # endregion
@@ -115,7 +115,7 @@ class Person:
 
     @staticmethod
     def _OnPersonCreated(e:EventArgs)->None:
-        Person._InstanceCreated +=1
+        Person._set_InstanceCreated(Person.get_InstanceCreated())
         Person._personCreatedcallbacks(None,e)
 
     def Kill(self)->None:
@@ -276,7 +276,7 @@ person.Kill() #We kill the person :( (school will do its logic due its principal
 
 #Static event example executing functions or methods
 def person_created_callback(sender:object,e:EventArgs):
-    print("Static callback works! person count:%d"% Person.InstanceCreated)
+    print("Static callback works! person count:%d"% Person.get_InstanceCreated())
 
 
 Person.PersonCreated += person_created_callback
