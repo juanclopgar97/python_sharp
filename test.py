@@ -115,7 +115,7 @@ class Person:
 
     @staticmethod
     def _OnPersonCreated(e:EventArgs)->None:
-        Person._set_InstanceCreated(Person.get_InstanceCreated())
+        Person._set_InstanceCreated(Person.get_InstanceCreated() + 1)
         Person._personCreatedcallbacks(None,e)
 
     def Kill(self)->None:
