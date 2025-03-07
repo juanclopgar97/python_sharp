@@ -264,13 +264,13 @@ Below this text, the use cases and explanation about the events are shown, pleas
     person.Name = "Something" 
   ```
 
-To implement a simple event the firt thing you have to do is create a variable to store the subscribers, look at this variable as a "To do list" due it contains the callables that are going to be executed at some specific time.
+To implement a simple event the first thing you have to do is create a variable to store the subscribers, look at this variable as a "To do list" due it contains the callables that are going to be executed at some specific time.
 
 ```python
 self._namechanged_callbacks = Delegate() 
 ```
 
-As you might notice the variable that is going to store the subscribers is a Delegate and the name starts with '_' to "protect" the attribute. Expose the attribute "publicly" is not a good practice, due other part of the code can manipulate the attribute wrongly or get/set information in a way that was not mean to. Through these 2 methods the other objects in the code can subscribe/unsubscribe (add/remove) callables to our delegate.
+As you might notice the variable that is going to store the subscribers is a Delegate and the name starts with '_' to "protect" the attribute. Expose the attribute "publicly" is not a good practice, due other part of the code can manipulate the attribute wrongly or get/set information in a way that was not mean to. To fix this, we can define 2 methods to encapsulate the delegate (add/remove methods), Through these 2 methods the other objects in the code can subscribe/unsubscribe (add/remove) callables to our delegate.
 
 ```python
       @event 
