@@ -267,7 +267,7 @@ Below this text, the use cases and explanation about the events are shown, pleas
 To implement a simple event the first thing you have to do is create a variable to store the subscribers, look at this variable as a "To do list" due it contains the callables that are going to be executed at some specific time.
 
 ```python
-self._namechanged_callbacks = Delegate() 
+self._namechanged_callbacks = Delegate() # it can be viewed as a "To do list"
 ```
 
 As you might notice the variable that is going to store the subscribers is a Delegate and the name starts with '_' to "protect" the attribute. Expose the attribute "publicly" is not a good practice, due other part of the code can manipulate the attribute wrongly or get/set information in a way that was not mean to. To fix this, we can define 2 methods to encapsulate the delegate (add/remove methods), Through these 2 methods the other objects in the code can subscribe/unsubscribe (add/remove) callables to our delegate.
@@ -282,17 +282,16 @@ As you might notice the variable that is going to store the subscribers is a Del
         self._namechanged_callbacks -= value # remove the callable to the attribute with a delegate
 ```
 
-Code above implements add/remove logic to the delegate, function below *@event* decorator defines the logic about how a callable should be added to our "To do list", function below
-*@NameChanged.remove* defines the logic for the "remove" or how a callable should be removed from the delegate.
+Code above implements add/remove logic to the delegate. Function below *@event* decorator defines the logic for the *add* or how a callable should be added to our "To do list". Function below *@NameChanged.remove* defines the logic for the *remove* or how a callable should be removed from the delegate
 
-Notice the functions HAVE to be named exactly the same, and if an *@event* is defined you **must** implement @IDENTIFIER.remove or code will throw a traceback this is to protect the integrity of the code and have correct instruction about how to add AND remove a callable.
+Notice the functions HAVE to be named exactly with the same name, and if an *@event* is defined you **must** implement *@IDENTIFIER.remove* or the code will throw a traceback, this is to protect the integrity of the code and provide instructions about how to add AND remove a callable.
 
-The callable to be added/removed will be passed through the "value" parameter. Notice in this example "value" parameter doesn't have any type annotation, this is only to keep things "simple" in this first example, however is HIGHLY RECOMMENDED annotate the type (as the following examples), due this indicates clearly what is the signature expected from the event to their subcribers.
+The callable to be added/removed will be passed through the "value" parameter. Notice in this example "value" parameter doesn't have any type annotation, this is only to keep this first example "simple/readable" at first sight, however is HIGHLY RECOMMENDED annotate the type as the following examples (Events with arguments or Events with modifiable arguments), due this is the way to indicate clearly what is the signature expected from the event to their subcribers (callables).
 
 Once this is in place, we have:
 
 - A place to store the callables 
-- Logic to let to other parts of the code add/remove callables (to do stuff)
+- Logic to let to other parts of the code add/remove callables
 
 Now we need to execute the callables in the right momment, in this case the event is called "NameChanged" so the callables should be executed when the name changes, this means our extra logic needs to be added in the Name setter due that is the part of the code that has this responsability (change the person's name).
 
@@ -315,12 +314,12 @@ In the snippet code above the comment defines where the "To do list" needs to be
         #logic when the name change (if any)
         self._namechanged_callbacks() #external logic
 ```
-Inside of this method the own logic and external logic of the event can be implented, in other words, What as a Person I need to do when my name changes? (own logic), and after, attend external logic (To do list) instruction provided by other objects or parts of the code. What others needs to do when my name changes?
+Inside of this method the own internal and external logic when the name change must be implemented, in other words, *What as a Person I need to do when my name changes?* (own/internal logic), and after, attend external logic (To do list) in other words instructionss provided by other objects or parts of the code. *What others needs to do when my name changes?*
 
 In this case the class Person doesn't need to do "something" when the name changes (internal logic), so we only need to execute the external logic (execute the delegate)
 
 
-Now we have a way to add/remove subscribers and trigger the event, however, you might notice the code above is not exactly the same as the example code, this is because despite the event is now implemented and working is not following a CONVENTION as a good practice. So even with a working code, is HIGHLY RECOMMENDED follow next convention:
+Now we have a way to add/remove subscribers and trigger the event, however, you might notice the code above is not exactly the same as the example code, this is because despite the event is now implemented and working is not following a good practice CONVENTION. So even with a working code, is HIGHLY RECOMMENDED follow next convention:
 
 ```python
       @Name.setter 
@@ -333,22 +332,28 @@ Now we have a way to add/remove subscribers and trigger the event, however, you 
         self._namechanged_callbacks(self,e)
 ```
 
-You can notice *_OnNameChanged* now requires a parametter called 'e' which is an EventArgs, this is a safety implementation, every "_On[EVENT NAME]" must require an EventArgs (or any other class that inherits from it), this is a way to say "Are you sure the event happens? show me the evidence!", in this case there is no arguments so the evidence is an empty EventArgs object, EventArgs object is used for the internal logic and passed to the external logic as parameter.
+You can notice 2 things
 
-And to finish 'self' is passed to the external logic as first parameter, this is to allow the subcriber know 'Who is executing my piece of code"
+1. *_OnNameChanged* now requires a parametter called 'e' which is an EventArgs, this is a safety implementation, every "_On[EVENT NAME]" must require an EventArgs (or any other class that inherits from it), this is a way to say "Are you sure the event happens? show me the evidence!", in this case there is no arguments so the evidence is an empty EventArgs object. EventArgs object is used first for the internal logic and then passed to the external logic as a parameter.
+
+2. 'self' is passed to the external logic as first parameter, this is to allow the subcribers know 'Who is executing my piece of code"
 
 
 
-**As summary:** There are 2 main sections to implement when you want to define an event; 
+**As summary:** 
 
-1. the part that store and remove callables
-2. the part that executes/trigger those callables stored
+- There are 2 main sections to implement when you want to define an event: 
 
-There are conventions about how the logic must be implemented to facilitate reading and maintenance of the code, and Callables to be subscribed to a simple event should follow the next signature:
+    1. Part that store and define how to add/remove callables
+    2. Part that executes/trigger those callables stored
 
-*Callable[[object, EventArgs], None]* (a callable with 2 parameters, first one contains the publisher and second the event arguments, the function must return None)
+- There are conventions about how the logic must be implemented to facilitate reading and maintenance of the code.
 
-So the *simple events* with the recomended annotation would be: 
+- Callables to be subscribed to a simple event should follow the next signature:
+
+    *Callable[[object, EventArgs], None]* (a callable with 2 parameters, first one contains the publisher and second the event arguments, the function must return None)
+
+The next snipped code shows and example of how the *simple events* should be implemented with the recomended annotation: 
 
 ```python
       @event 
@@ -360,7 +365,7 @@ So the *simple events* with the recomended annotation would be:
         self._namechanged_callbacks -= value 
 ```
 
-to clarify that the event expect a subscriber with that signature.
+This is done with the intention of clarify what is the event expecting from its subscribers signature.
 
 
 To use the event:
