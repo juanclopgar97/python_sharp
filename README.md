@@ -1,6 +1,19 @@
 <!--img src="https://github.com/juanclopgar97/python_sharp/blob/master/documentation_images/python_sharp.png" width="300"-->
 <img src="./documentation_images/python_sharp.png" width="300">
 
+```python
+    def project_finished(sender:object,e:EventArgs)->None:
+      print("Develop is fun!!!")
+
+    project = Project() 
+    project.Finished += project_finished
+    project.Finish()
+
+```
+```
+"Develop is fun!!!"
+```
+
 # Python# (Python sharp)
 
 ## Table of Contents
@@ -22,6 +35,8 @@
 ## Introduction
 
 python# (python sharp) module was created with the intention of adding EOP (event oriented programing) into python in the most native feeling, easy sintax way possible.
+
+EOP is a programming paradigm that allows execute actions (code) based on "doings" or events, this is really usefull when you have to execute specific actions when something happens but you do not have the certainty when or how many times is going to happen.
 
 This module was thought to accomplish EOP with 2 objetives in mind:
 
@@ -681,4 +696,50 @@ Code above shows how the *LocationChangingEventArgs* is created and stored in *l
 
 Static events are almost the same as the events described previoulsy, they can be implemented as well as "simple events", "with arguments" or "with modifiable arguments", key difference is the event is applied as a class event, no an instance event.
 
-For this section the example provided is a *simple static event* due it is the simplest way to show the differences, in case you want implement a *static event with arguments* go back to <a name="#Events-with-arguments">*Events with-arguments*</a> section and apply it to the class instead of the instance as the example of *simple static event* shows
+For this section the example provided is a *simple static event* due it is the simplest way to show the differences, in case you want implement a *static event with arguments* go back to [Events with arguments](#Events-with-arguments) section and apply it to the class instead of the instance as the example of *simple static event* shows.
+
+Imagine a class that provides the number of instances that it creates, this variable should be defined as an *static variable*, due there is no necessity for every single class instance to contain the same exactly number, and even worse, if the number changes it needs to be updated on every single instance created , that is the reason why this variable should be implemented as *static variable*.
+
+Now imagine we want to notify when an instance is created, in other words when the *static variable* changes its value, as this event is going to notify something is going on with a static variable, we need a static event:
+
+```python
+from python_sharp import *
+
+class Person:
+    _instance_created:int = 0
+    _personCreatedcallbacks:Delegate = Delegate()
+
+    def __init__(self)->None:
+        Person._OnPersonCreated(EventArgs())
+
+    @staticmethod
+    def get_InstanceCreated()->int:
+        return Person._instance_created
+    
+    @staticmethod
+    def _set_InstanceCreated(value:int)->None:
+        Person._instance_created = value
+
+
+    @staticmethod
+    def _OnPersonCreated(e:EventArgs)->None:
+        Person._set_InstanceCreated(Person.get_InstanceCreated() + 1)
+        Person._personCreatedcallbacks(None,e)
+        
+    @staticevent
+    def PersonCreated(value:Callable[[object, EventArgs], None])->None:
+        Person._personCreatedcallbacks += value
+
+    @PersonCreated.remove
+    def PersonCreated(value:Callable[[object, EventArgs], None])->None:
+        Person._personCreatedcallbacks -= value
+```
+
+As you can see a *simple event* implementations is almost identical to *simple static event*
+
+Key differences:
+
+- All members used (variable, methods and event) are static (use of @staticevent instead of @event)
+- Get/Set methods to encapsulate the static variable are implemented as static methods due a lack of static properties python implementation
+
+And that is it, those are all difference, so if you have questions about how this code works, is HIGHLY RECOMMENDED go back to [Events](#Events) section.
