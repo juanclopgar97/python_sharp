@@ -264,6 +264,11 @@ Below this text, the use cases and explanation about the events are shown, pleas
     person.Name = "Something" 
   ```
 
+  OUTPUT
+  ```
+  person change its name to Carlos
+  ```
+
 To implement a simple event the first thing you have to do is create a variable to store the subscribers, look at this variable as a "To do list" due it contains the callables that are going to be executed at some specific time.
 
 ```python
@@ -430,6 +435,7 @@ To use the event:
         def Moved(self,value:Callable[[object, MovedEventArgs], None])->None:
            self._movedcallbacks -= value  
 
+
     def person_Moved(sender:object,e:MovedEventArgs)->None:
       print("Person moves %d units" % e.Delta)
 
@@ -440,6 +446,83 @@ To use the event:
     person.Moved -= person_moved
     person.Location = 0
   ```
+
+  OUTPUT
+  ```
+  Person moves 10 units
+  ```
+
+*Events with arguments* are almost the same as *simple events* so, the next explanation will only address the differences between the 2 cases.
+
+```python
+    class MovedEventArgs(EventArgs):
+
+        _delta:int
+
+        def __init__(self,delta:int)->None:
+            super().__init__()
+            self._delta = delta
+
+        @property
+        def Delta(self)->int:
+            return self._delta
+```
+
+In this case a custom EventArgs is created in order to be capable of store the event arguments, on this example the event is named "Moved", and is going to be triggered when the person changes its location, in addition, it will provide HOW MUCH the person moves, this is the job of the *MovedEventArgs* and the main difference with a *simple event*.
+
+In the next code block we can see how the event is being defined:
+
+```python
+        @event 
+        def Moved(self,value:Callable[[object, MovedEventArgs], None])->None:
+            self._movedcallbacks += value
+
+        @Moved.remove
+        def Moved(self,value:Callable[[object, MovedEventArgs], None])->None:
+           self._movedcallbacks -= value  
+```
+
+in this case the only difference is the 'value' parameter annotation,  this indicates that the event requieres a *Callable[[object, MovedEventArgs], None]* subscriber signature, in other words a *MovedEventArgs* will be provided to the subscriber.
+
+It is HIGHLY IMPORTANT to realize *Moved* event signature is *Callable[[object, MovedEventArgs], None]* therefore it can accept subscribers with the next signatures:
+
+- *Callable[[object, MovedEventArgs], None]*
+- *Callable[[object, EventArgs], None]*
+
+This 2 signatures are ok due polimorfism, it can be confusing due at first sight seems like we are asigning an *EventArgs* to a *MovedEventArgs* (*MovedEventArgs* <- *EventArgs*), this case is not valid, due it might throw a Traceback if a *MovedEventArgs* member is trying to be acceses into a *EventArgs* object. However in this example case is not the same,
+the subscriber with *Callable[[object, EventArgs], None]* signature defines how the paramater object is going to be treated by the callable, in this case, the parameter will be used/treated as an *EventArgs*, and the event will provide a *MovedEventArgs* object to the callable so in reallity we are asigning a *MovedEventArgs* object to an *EventArgs* variable (*EventArgs* <- *MovedEventArgs*) wich by polimorfism will not cause any issue trying to access any of the *EventArgs* members.
+
+Next diagram explains a general case for what was explained above (event subscriber signatures accepted by an event):
+
+<img src="./documentation_images/event_assignament_example.png" width="100%">
+
+
+And the last difference but not less important is how the event is going to be trigerred:
+
+```python
+        @Location.setter
+        def Location(self,value:int)->None:      
+            previous = self.Location 
+            self._location = value
+            self._OnMoved(MovedEventArgs(self.Location - previous))
+
+        def _OnMoved(self,e:MovedEventArgs)->None:
+            self._movedcallbacks(self,e)
+```
+
+We can see in the code block above now *_OnMoved* method now requires a *MovedEventArgs*, as *simple events* did, this is for security reasons, if we are going to execute *_OnMoved* method because the event happens, that is a way to say "prove it or show the evidence!".
+
+Second difference is when *Location* settter is calling *_OnMoved* method, now it needs to create an instance of *MovedEventArgs* and to do so, it requieres a quantity to be passed to the constructor, this quantity of "how much the person moves" can be calculated with a substraction of previous and current location.
+
+
+**As summary:** 
+
+*Events with arguments* and *simple arguments* are really similar and there are only some differences:
+
+1. Needs a custom *EventArgs* class defined.
+2. Events with custom *EventArgs* can accept different subscriber signatures
+3. _On[Event name] method uses the custom *EventArgs* class and this causes an extra security layer
+4. Trigger code now needs to create an instance of the new custom *EventArgs* and to do so, it needs to provide/calculate the arguments needed by the custom *EventArgs* constructor
 
 
 ##### Events with modifiable arguments
