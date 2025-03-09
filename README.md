@@ -15,8 +15,9 @@
         1. [EventArgs, CustomEventArgs and CancellableEventArgs class](#eventargs-customeventargs-and-cancellableeventargs-class)
         2. [Implementation](#Implementation)
             1. [Simple events](#Simple-events)
-            2. [Events with arguments](#Events-with-argumentss)
+            2. [Events with arguments](#Events-with-arguments)
             3. [Events with modifiable arguments](#Events-with-modifiable-arguments)
+    3. [Static events](#Static-events)
 
 ## Introduction
 
@@ -158,16 +159,25 @@ Events are commonly part of an event-driven programming paradigm, where the flow
 Events can be implemented as members of an instance or a class (static events) on different ways, in this module we can group this "ways" into 3 main implementations:
 
 1. **Simple events** (Normally implemented as *property changed* events):
-  This events only "notify" that something relevant happens, they do not provide extra information about the event like: How, When, Why etc
+  These events only "notify" that something relevant happens, they do not provide extra information about the event like: How, When, Why etc.
+  
+  Name connvention for this events is VERB + 'ed' (past simple):
+
+  - NameChanged (this is an example of property change implementation in this case for Name property)
+  - LocationChanged (this is an example of property change implementation in this case for Location property)
+  - Moved
+  - Executed
 
 2. **Events with arguments**:
-  This events are like the previous one but they are capable of provide extra information about the event like: How, When, Why etc, to the subscribers through a parameter (Normally a custom 'EventArgs' type called 'e')
+  This events are like *simple events* but they are capable of provide extra information about the event like: How, When, Why etc, to the subscribers through a parameter. They follow the same name convention as *simple events*.
 
 3. **Events with modifiable arguments** (Normally implemented as *pre-events*)
-  This events are like the one in the point number 2, but now the arguments are not only *read_only* arguments, on point 2, event arguments are *read_only* arguments because the arguments are information passed from         the publisher (object that implement the event) to subscribers (object that is interested to be notified) so there is no reason to let the subscriber change that information. However the events described on this
-  point (point 3) can contain editable arguments, this arguments are not designed to provide information about the event, but rather they act like a channel to let the subcriber set and pass information to the publisher.
 
-  An example to clarify this could be an event called "WindowClosing", this event will notify that a window is about to close, the subscribers will have the power to pass information through the event arguments to cancel   the action, this is really useful if the changes in the app are not saved.
+  *Events with modifiable arguments* are most likely implemented as **pre-events** this means the event advertise something that is about to happen, and it will let the subscribers provide information to determine the future, like cancelling what was about to happen or modify how it was going to be done.
+
+  Name convention for this events is VERB + 'ing' (present continous)
+
+  - An example to clarify this could be an event called "WindowClosing", this event will notify that a window is about to close, the subscribers will have the power to pass information through the event arguments to cancel the action, this is really useful if the changes in the app are not saved.
 
 #### EventArgs, CustomEventArgs and CancellableEventArgs class
 
@@ -269,7 +279,11 @@ Below this text, the use cases and explanation about the events are shown, pleas
   person change its name to Carlos
   ```
 
-To implement a simple event the first thing you have to do is create a variable to store the subscribers, look at this variable as a "To do list" due it contains the callables that are going to be executed at some specific time.
+"simple events"" notify" that something relevant happens, they do not provide extra information about the event like.
+
+On this example an event *NameChanged* is implemented to notify when the person's name change.
+
+To implement a *simple event* the first thing you have to do is create a variable to store the subscribers, look at this variable as a "To do list" due it contains the callables that are going to be executed at some specific time.
 
 ```python
 self._namechanged_callbacks = Delegate() # it can be viewed as a "To do list"
@@ -454,6 +468,8 @@ To use the event:
 
 *Events with arguments* are almost the same as *simple events* so, the next explanation will only address the differences between the 2 cases.
 
+On this example an event named "Moved" is implemented to notify when a person moves and provide how much does the person move.
+
 ```python
     class MovedEventArgs(EventArgs):
 
@@ -519,13 +535,13 @@ Second difference is when *Location* settter is calling *_OnMoved* method, now i
 
 *Events with arguments* and *simple arguments* are really similar and there are only some differences:
 
-1. Needs a custom *EventArgs* class defined.
-2. Events with custom *EventArgs* can accept different subscriber signatures
-3. _On[Event name] method uses the custom *EventArgs* class and this causes an extra security layer
-4. Trigger code now needs to create an instance of the new custom *EventArgs* and to do so, it needs to provide/calculate the arguments needed by the custom *EventArgs* constructor
+- Needs a custom *EventArgs* class defined.
+- Events with custom *EventArgs* can accept different subscriber signatures
+- _On[Event name] method uses the custom *EventArgs* class and this causes an extra security layer
+- Trigger code now needs to create an instance of the new custom *EventArgs* and to do so, it needs to provide/calculate the arguments needed by the custom *EventArgs* constructor
 
 
-##### Events with modifiable arguments
+##### Events with modifiable arguments 
 
   ```python
     from python_sharp import *
@@ -588,6 +604,81 @@ Second difference is when *Location* settter is calling *_OnMoved* method, now i
 
   ```
 
+ OUTPUT
+ ```python
+ 50
+ ```
+
+*Events with modifiable arguments* are really similar to *Events with arguments* this explanation will address only the differences, so if you have doubts about the implementation go back to that section. 
+
+*Events with modifiable arguments* are most likely implemented as **pre-events** this means the event advertise something that is about to happen, and it will let the subscribers provide information (Thorugh a custom *EventArgs*) to determine the future, like cancelling what was about to happen or modify how it was going to be done.
+
+On this example an event named "LocationChanging" is implemented to notify when the person's location is about to be changed, this will let the subscribers cancel or modify the future behaviour of that action.
+
+Key difference is the way the custom *EventArgs* is defined:
+
+```python
+class CancellableEventArgs(EventArgs): #Defined already on python_sharp module
+    _cancel:bool
+
+    def __init__(self)->None:
+        super().__init__()
+        self._cancel = False 
+
+    
+    @property
+    def Cancel(self)->bool:
+        return self._cancel
+    
+    @Cancel.setter
+    def Cancel(self,value:bool)->None:
+        self._cancel = value
+
+class LocationChangingEventArgs(CancellableEventArgs):
+
+        _value:int
+
+        def __init__(self,value:int)->None:
+            super().__init__()
+            self._value = value
+
+        @property
+        def Value(self)->int:
+            return self._value
+```
+
+As you can see our custom *EventArgs* is *LocationChangingEventArgs* this class inherits from *CancellableEventArgs*, an *IMPORTANT* remark is Inherit from *CancellableEventArgs* is not necessary to create an *Event with modifiable argument*. *CancellableEventArgs* is just a built in custom *EventArgs* used for *Event with modifiable argument*, the fact *LocationChangingEventArgs* inherits from it is just to show case a use of it.
+
+Key factor to know when an event is an *Event with modifiable argument* is if the ***EventArgs* class class contains a property with a setter**.
+
+*LocationChangingEventArgs* does not contain a property with a setter by itself, but due it inherits from an *EventArgs* which contains it (*CancellableEventArgs*), we can consider that *LocationChangingEventArgs* actually contains a property with a setter.
+
+For this particular example *Cancel* property is set to *False* by default, when the  *EventArgs* object is passed to the subscribers now they have the ability to change *Cancel* value property:
+
+```python
+    def person_LocationChanging(sender:object,e:LocationChangingEventArgs):
+      if e.Value > 100:
+        e.Cancel = True
+```
+
+In the code block above is shown how the subscriber uses *e.Value* to determine if *e.Cancel* is going to be set to *True*, subsequently the publisher can use this value to modify some behaviour:
+
+```python
+        @Location.setter
+        def Location(self,value:int)->None:
+
+            locationEventArgs = LocationChangingEventArgs(value)
+            self._OnLocationChanging(locationEventArgs)
+
+            if(not locationEventArgs.Cancel):
+                self._location = value
+```
+
+Code above shows how the *LocationChangingEventArgs* is created and stored in *locationEventArgs* variable in order to keep a reference to the object, once that is done, the *LocationChangingEventArgs* object is send to *_OnLocationChanging* method to execute internal and external logic (external logic will execute all subscribers that might change *Cancel* property value), and at the end of the  *_OnLocationChanging* execution we can check the *locationEventArgs* variable to evaluate if the *LocationChangingEventArgs* object *Cancel* property is *True* or *False*, with this value we can alter the code behaviour. For this particular example *Cancel* property is being use to determine if the person should change its location or not
 
 
+### Static events
 
+Static events are almost the same as the events described previoulsy, they can be implemented as well as "simple events", "with arguments" or "with modifiable arguments", key difference is the event is applied as a class event, no an instance event.
+
+For this section the example provided is a *simple static event* due it is the simplest way to show the differences, in case you want implement a *static event with arguments* go back to <a name="#Events-with-arguments">*Events with-arguments*</a> section and apply it to the class instead of the instance as the example of *simple static event* shows
