@@ -95,10 +95,10 @@ or you can install the package directly from GitHub using the following command:
 pip install git+https://github.com/juanclopgar97/python_sharp.git
 ```
 
-or from a specific branch/commit:
+or from a specific branch/commit/version:
 
 ```bash
-pip install git+https://github.com/juanclopgar97/python_sharp.git@<branch_or_commit>
+pip install git+https://github.com/juanclopgar97/python_sharp.git@<branch_or_commit_or_version>
 ```
 
 ### Usage
