@@ -9,7 +9,7 @@ setup(
     long_description=open("README.md", "r", encoding="utf-8").read(),  # Reads the content of the README file
     long_description_content_type="text/markdown",  # Specifies the format of the README file
     url="https://github.com/juanclopgar97/python_sharp.git",  # Repository URL 
-    packages=find_packages(),  # Automatically detects the submodules
+    py_modules=["python_sharp"],
     classifiers=[
         "Programming Language :: Python :: 3",  # Indicates the supported Python version
         "License :: MIT License",  # Type of license
