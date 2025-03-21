@@ -80,33 +80,34 @@ For objective 2, the module was architected thinking in how another EOP language
 - **Python**: Version 3.6 or higher
 - **pip**: Python package manager
 
-To install `python_sharp` directly from GitHub, follow these steps:
+To install `python_sharp` you can follow either of the options listed:
 
-### 1. Clone the Repository (Optional)
+### 1. Clone the Repository 
 If you want to explore the source code, you can clone the repository:
 ```bash
 git clone https://github.com/juanclopgar97/python_sharp.git
 cd python_sharp
 ```
 
-or you can install the package directly from GitHub using the following command:
+### 2. Install the package directly from GitHub using pip:
 
 ```bash
 pip install git+https://github.com/juanclopgar97/python_sharp.git
 ```
 
-or from a specific branch/commit/version:
+from a specific branch/commit/version:
 
 ```bash
 pip install git+https://github.com/juanclopgar97/python_sharp.git@<branch_or_commit_or_version>
 ```
-Example
+
+Example:
 
 ```bash
 pip install git+https://github.com/juanclopgar97/python_sharp.git@v1.0.0
 ```
 
-Or install from Pypi most recient
+### 3. Install from Pypi
 
 ```bash
 pip install python_sharp
