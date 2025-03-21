@@ -82,6 +82,10 @@ For objective 2, the module was architected thinking in how another EOP language
 
 To install `python_sharp` you can follow either of the options listed:
 
+### Disclaimer
+
+version 1.0.0 is only available through GitHub Pypi does not contain that version.
+
 ### 1. Clone the Repository 
 If you want to explore the source code, you can clone the repository:
 ```bash
@@ -121,7 +125,7 @@ pip install python_sharp==<version>
 Example:
 
 ```bash
-pip install python_sharp==1.0.0
+pip install python_sharp==1.0.1
 ```
 Upgrade it:
 
