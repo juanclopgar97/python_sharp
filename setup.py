@@ -12,7 +12,7 @@ setup(
     py_modules=["python_sharp"],
     classifiers=[
         "Programming Language :: Python :: 3",  # Indicates the supported Python version
-        "License :: MIT License",  # Type of license
+        "License :: OSI Approved :: MIT License",  # Type of license
         "Operating System :: OS Independent",  # Compatible operating systems
     ],
     python_requires=">=3.6",  # Minimum required Python version
