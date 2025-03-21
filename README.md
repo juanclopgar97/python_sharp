@@ -100,6 +100,34 @@ or from a specific branch/commit/version:
 ```bash
 pip install git+https://github.com/juanclopgar97/python_sharp.git@<branch_or_commit_or_version>
 ```
+Example
+
+```bash
+pip install git+https://github.com/juanclopgar97/python_sharp.git@v1.0.0
+```
+
+Or install from Pypi most recient
+
+```bash
+pip install python_sharp
+```
+or select your version
+
+```bash
+pip install python_sharp==<version>
+```
+
+Example:
+
+```bash
+pip install python_sharp==1.0.0
+```
+Upgrade it:
+
+```bash
+pip install python-sharp --upgrade
+```
+
 
 ### Usage
 
