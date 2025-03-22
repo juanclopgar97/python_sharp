@@ -6,8 +6,8 @@
       print("Develop is fun!!!")
 
     project = Project() 
-    project.Finished += project_finished
-    project.Finish()
+    project.finished += project_finished
+    project.finish()
 
 ```
 ```
@@ -19,7 +19,9 @@
 ## Table of Contents
 1. [Introduction](#Introduction)
 2. [Installation](#Installation)
-3. [Use cases and examples](#Use-cases-and-examples)
+3. [Tools and support](#tools-and-support)
+4. [Important disclamer](#important-disclamer)
+5. [Use cases and examples](#Use-cases-and-examples)
     1. [Delegates](#Delegates)
         1. [How to add callables into a Delegate](#How-to-add-callables-into-a-Delegate)
         2. [How to get returned values of callables out of a Delegate](#How-to-get-returned-values-of-callables-out-of-a-Delegate)
@@ -30,6 +32,7 @@
             1. [Simple events](#Simple-events)
             2. [Events with arguments](#Events-with-arguments)
             3. [Events with modifiable arguments](#Events-with-modifiable-arguments)
+            4. [Implementation summary](#implementation-summary)
     3. [Static events](#Static-events)
 
 ## Introduction
@@ -51,15 +54,15 @@ class Person:
     self._name = name
 
   @property
-  def Name(self)->str: 
+  def name(self)->str: 
         return self._name
 
-  @Name.setter 
-  def Name(self,value:str)->None:
+  @name.setter 
+  def name(self,value:str)->None:
         self._name = value
 
   @event
-  def NameChanged(self,value):
+  def name_changed(self,value)->None:
     #some implementation
     pass
 ```
@@ -68,7 +71,7 @@ For objective 2, the module was architected thinking in how another EOP language
 
 1. C# implements events as a collection of callbacks that will be executed in some point of time, this collection of functions are called **Delegates**, invoking(executing) the delegate will cause the execution of all functions(callables) in its collection.
 
-2. delegates are not publicly expose, commonly due security reasons, as the fields/attributes have to be encapsulated, delegates as well, and the way to encapsulate them is with events. Fields/attributes are to properties as delegates are to events.
+2. delegates are not commonly exposed publicly, due security reasons. As the fields/attributes in a class have to be encapsulated, delegates as well, and the way to encapsulate them is with events. Fields/attributes are to properties as delegates are to events.
 
 3. Properties encapsulate fields/attributes with 2 functions/methods called "get" and "set", which define the logic of how data should be GET and SET out of the object, in C# events encapsulate delegates with 2 functions as well called "add" and "remove", which define the logic of how functions/subscribers should be added or removed out of the delegate.
 
@@ -142,6 +145,25 @@ from python_sharp import *
 #your code
 ```
 
+## Tools and support
+
+Currently there is an upcoming effort to create a VS code extension to deliver a better expirence while using python sharp, an example of this is a custom OUTLINE to visualize *@property* and *@event* with its corresponding icons as the next image shows:
+
+<img src="./documentation_images/outline_support.png">
+
+and so much more!, if you want to see it come true you can show interest using and spreading the use of python sharp, this will help to add more support to the project.
+
+To create an enhancement request, report a bug, raise a question etc. you can use the [issues](https://github.com/juanclopgar97/python_sharp/issues) section of this repository with the corresponding labels **enhancement**, **bug**, **question** etc. in this way collaborators can check for the request and attend it.
+
+## Important disclamer
+
+In some parts of this documentation you will find the words "**HIGHLY RECOMMENDED**", this words are used to highlight some important use aspects of python sharp.
+
+The omission of "**HIGHLY RECOMMENDED**" conventions (like naming conventions, or implementation conventions) might not break your code and it might be work without them, even you might found a way to create your own way to implement them, HOWEVER, this could lead to readability, clarity, maintenance and scalability issues of the code. 
+
+For this reason always **FOLLOW THE CONVENTIONS** due this is necessary to keep the readability, clarity, maintenance and scalability of your code, in this way other collaborators can go over your code easily and improve the work flow.
+
+
 ## Use cases and examples:
 
 In this repository there are 2 main files "python_sharp.py" (which is the module file) and "test.py". This last file contains all the features applied into one single script, this could be really usefull if you want to do a quick check about how something is implemented, however, due it is a "testing" script and not a "walk through" it could be confusing if you do not know what is going on, so it is **Highly recommended** read the below documentation which explains step by step how to implement every single feature in the module.
@@ -156,15 +178,15 @@ It is really important to keep the callables added into the delegate with consis
 ```python
 from python_sharp import *
 
-def function1(parameter1:int): #defining a function with 1 parameter (int type)
-  print("function1")
+def function_1(parameter_1:int): # defining a function with 1 parameter (int type)
+  print("function 1")
 
-def function2(parameter1:int,parameter2:str): #defining a function with 2 parametrs (int,str types)
-  print("function2")
+def function_2(parameter_1:int,parameter_2:str): # defining a function with 2 parametrs (int,str types)
+  print("function 2")
 
 delegate = Delegate() #creating a Delegate
-delegate += function1 #adding function1
-delegate += function2 #adding function2
+delegate += function_1 #adding function_1
+delegate += function_2 #adding function_2
 
 delegate(5) # executing the delegate with only 1 parameter
 
@@ -172,7 +194,7 @@ delegate(5) # executing the delegate with only 1 parameter
 
 OUTPUT:
 ```
-function1
+function 1
 Traceback (most recent call last):
   File "c:\PATH\test.py", line 341, in <module>
     delegate(5) # executing the delegate with only 1 parameter
@@ -180,10 +202,10 @@ Traceback (most recent call last):
   File "c:\PATH\python_sharp.py", line 72, in __call__
     results.append(callable( *args, **kwds))
                    ^^^^^^^^^^^^^^^^^^^^^^^^
-TypeError: function2() missing 1 required positional argument: 'parameter2'
+TypeError: function_2() missing 1 required positional argument: 'parameter_2'
 ```
 
-Here *function1* was executed correctly due the signature of the function match with how the delegate was executed (passing only one integer "5"), and *function2* was expecting a second string parameter resulting in a TypeError. So, it is really important keep signatures in a homogeneous manner.
+Here *function_1* was executed correctly due the signature of the function match with how the delegate was executed (passing only one integer "5"), and *function_2* was expecting a second string parameter resulting in a TypeError. So, it is really important keep signatures in a homogeneous manner.
 
 #### How to get returned values of callables out of a Delegate
 
@@ -241,12 +263,14 @@ Events can be implemented as members of an instance or a class (static events) o
 1. **Simple events** (Normally implemented as *property changed* events):
   These events only "notify" that something relevant happens, they do not provide extra information about the event like: How, When, Why etc.
   
-  Name connvention for this events is VERB + 'ed' (past simple):
+  Name connvention for this events is: [optional subject or adjetive] +  VERB + 'ed' (past simple).
 
-  - NameChanged (this is an example of property change implementation in this case for Name property)
-  - LocationChanged (this is an example of property change implementation in this case for Location property)
-  - Moved
-  - Executed
+  Examples:
+
+  - name_changed (this is an example of property change implementation in this case for *name* property)
+  - location_changed (this is an example of property change implementation in this case for *location* property)
+  - moved
+  - executed
 
 2. **Events with arguments**:
   This events are like *simple events* but they are capable of provide extra information about the event like: How, When, Why etc, to the subscribers through a parameter. They follow the same name convention as *simple events*.
@@ -255,9 +279,20 @@ Events can be implemented as members of an instance or a class (static events) o
 
   *Events with modifiable arguments* are most likely implemented as **pre-events** this means the event advertise something that is about to happen, and it will let the subscribers provide information to determine the future, like cancelling what was about to happen or modify how it was going to be done.
 
-  Name convention for this events is VERB + 'ing' (present continous)
+  Name convention for this events is: [optional subject or adjetive] + VERB + 'ing' (present continous).
 
-  - An example to clarify this could be an event called "WindowClosing", this event will notify that a window is about to close, the subscribers will have the power to pass information through the event arguments to cancel the action, this is really useful if the changes in the app are not saved.
+  Examples:
+
+  - name_changing 
+  - house_changing 
+  - moving
+  - executing
+
+  - Another example to clarify this could be an event called "window_closing", this event will notify that a window is about to close, the subscribers will have the power to pass information through the event arguments to cancel or modify the incoming action (in this case the window closing), this is really useful if the changes in the app are not saved.
+
+
+  In some rare occations these name conventions will not satisfy your necessities to name your events due they don't describe properly what your events are going to do, and it is fine to name them as you want, however, is **HIGHLY RECOMMENDED** use these name conventions as much as possible, due this would lead to better readability, clarity, maintenance and scalability of the code, so, if you can name your events under the suggested name conventions **DO IT**, only use your own naming conventions if the naming conventions described in this document do not fit with what your event is going to do. 
+
 
 #### EventArgs, CustomEventArgs and CancellableEventArgs class
 
@@ -267,7 +302,7 @@ Events can be implemented as members of an instance or a class (static events) o
 
 -  **Events with arguments** use a custom class that inherit from *EventArgs* class to describe what arguments are going to be passed to the subscriber. The arguments passed to the subscriber are passed as read_only properties (properties with only getter). If a **simple event** is not enough, you might need an **Event with arguments**, in this case, you can use a custom EventArgs that contains your arguments.
 
-    As a use case example imagine an event called *Moved*, this event notifies when the object moves, but maybe only notify the movement is not enough and we want to inform how much the object moves, this is a perfect use for our custom *EventArgs* class:
+    As a use case example imagine an event called *moved*, this event notifies when the object moves, but maybe only notify the movement is not enough and we want to inform how much the object moves, this is a perfect use for our custom *EventArgs* class:
 
 
     ```python
@@ -280,7 +315,7 @@ Events can be implemented as members of an instance or a class (static events) o
             self._delta = delta # Save the distance
 
         @property
-        def Delta(self)->int: #encapsulate the value and placing its getter
+        def delta(self)->int: #encapsulate the value and placing its getter
             return self._delta
     ```
 
@@ -298,15 +333,18 @@ Events can be implemented as members of an instance or a class (static events) o
     
         
         @property
-        def Cancel(self)->bool: #to show the value of _cancel attribute
+        def cancel(self)->bool: #to show the value of _cancel attribute
             return self._cancel
         
-        @Cancel.setter
-        def Cancel(self,value:bool)->None: #to let the subscriber set a value into _cancel
+        @cancel.setter
+        def cancel(self,value:bool)->None: #to let the subscriber set a value into _cancel
             self._cancel = value
     ```
 
     as you can see, this implementation is really similar to **Events with arguments**, the only difference is we are placing a setter method to let modify the cancel value, this value can be used for the publisher at the end of the exectution of all the callbacks stored.
+
+    It is **REALLY IMPORTANT** to remark, CancellableEventArgs is only an example of an *EventArgs* used for **Events with modifiable arguments** and is not the only way to implement it, you don't even need to inherit necessarily from it. In order to consider an *EventArgs* used for **Events with modifiable arguments** it has to implement a setter on it, in this way this new *EventArgs* can provide and store information about the event, and this information can be used by the publisher and subscribers. Another way to see it is as a bidirectional channel to communicate the publisher and subcribers, publisher can provide information with the getters and subcribers can store information in it with the setters.
+
 
 #### Implementation
 
@@ -315,43 +353,43 @@ Below this text, the use cases and explanation about the events are shown, pleas
 ##### Simple events
 
   ```python
-    from python_sharp import *
+  from python_sharp import *
 
-    class Person: 
+  class Person: 
     
-      def __init__(self, name:str)->None: 
-        self._name = name 
-        self._namechanged_callbacks = Delegate() 
+    def __init__(self, name:str)->None: 
+      self._name = name 
+      self._name_changed = Delegate() #collection of future callbacks
 
-      @property 
-      def Name(self)->str:
-        return self._name
+    @property 
+    def name(self)->str:
+      return self._name
 
-      @Name.setter 
-      def Name(self,value:str)->None:
-        self._name = value
-        self._OnNameChanged(EventArgs()) 
+    @name.setter 
+    def name(self,value:str)->None:
+      self._name = value
+      self._on_name_changed(EventArgs()) 
 
-      def _OnNameChanged(self,e:EventArgs)->None:
-        self._namechanged_callbacks(self,e) 
+    def _on_name_changed(self,e:EventArgs)->None:
+      self._name_changed(self,e) 
 
-      @event 
-      def NameChanged(self,value)->None:
-        self._namechanged_callbacks += value
+    @event 
+    def name_changed(self,value)->None: # This example doesn't contain the parameter annotations for simplicity due it is the first example, however (as the document will explain in the summary of simple events), it is really important to place the event annotations. (There is a link at the end of this code block to go to the explanation)
+      self._name_changed += value
 
-      @NameChanged.remove
-      def NameChanged(self,value)->None:
-        self._namechanged_callbacks -= value 
+    @name_changed.remove
+    def name_changed(self,value)->None: # Annotations are not included for simplicity due it is the first example
+      self._name_changed -= value 
 
 
-    def person_NameChanged(sender:object,e:EventArgs)->None:
-      print("person change its name to %s" % sender.Name)
+  def person_name_changed(sender:object,e:EventArgs)->None:
+    print("person change its name to %s" % sender.name)
 
-    person = Person("Juan")
-    person.NameChanged += person_NameChanged 
-    person.Name = "Carlos" 
-    person.NameChanged -= person_NameChanged 
-    person.Name = "Something" 
+  person = Person("Juan")
+  person.name_changed += person_name_changed 
+  person.name = "Carlos" 
+  person.name_changed -= person_name_changed 
+  person.name = "Something" 
   ```
 
   OUTPUT
@@ -359,81 +397,83 @@ Below this text, the use cases and explanation about the events are shown, pleas
   person change its name to Carlos
   ```
 
-"simple events"" notify" that something relevant happens, they do not provide extra information about the event like.
+[Link to event annotation convention explanation](#event-annotation-convention)
 
-On this example an event *NameChanged* is implemented to notify when the person's name change.
+*"simple events"* "notify" that something relevant happens, they do not provide extra information about the event like why, when, where, etc.
+
+On this example an event *name_changed* is implemented to notify when the person's name change.
 
 To implement a *simple event* the first thing you have to do is create a variable to store the subscribers, look at this variable as a "To do list" due it contains the callables that are going to be executed at some specific time.
 
 ```python
-self._namechanged_callbacks = Delegate() # it can be viewed as a "To do list"
+self._name_changed = Delegate() # it can be viewed as a "To do list"
 ```
 
 As you might notice the variable that is going to store the subscribers is a Delegate and the name starts with '_' to "protect" the attribute. Expose the attribute "publicly" is not a good practice, due other part of the code can manipulate the attribute wrongly or get/set information in a way that was not mean to. To fix this, we can define 2 methods to encapsulate the delegate (add/remove methods), Through these 2 methods the other objects in the code can subscribe/unsubscribe (add/remove) callables to our delegate.
 
 ```python
-      @event 
-      def NameChanged(self,value)->None:
-        self._namechanged_callbacks += value # add the new callable to the attribute with a delegate
+  @event 
+  def name_changed(self,value)->None:
+    self._name_changed += value # add the new callable to the attribute with a delegate
 
-      @NameChanged.remove
-      def NameChanged(self,value)->None:
-        self._namechanged_callbacks -= value # remove the callable to the attribute with a delegate
+  @name_changed.remove
+  def name_changed(self,value)->None:
+    self._name_changed -= value # remove the callable to the attribute with a delegate
 ```
 
-Code above implements add/remove logic to the delegate. Function below *@event* decorator defines the logic for the *add* or how a callable should be added to our "To do list". Function below *@NameChanged.remove* defines the logic for the *remove* or how a callable should be removed from the delegate
+Code above implements add/remove logic to the delegate. Function below *@event* decorator defines the logic for the *add* or how a callable should be added to our "To do list". Function below *@name_changed.remove* defines the logic for the *remove* or how a callable should be removed from the delegate
 
 Notice the functions HAVE to be named exactly with the same name, and if an *@event* is defined you **must** implement *@IDENTIFIER.remove* or the code will throw a traceback, this is to protect the integrity of the code and provide instructions about how to add AND remove a callable.
 
-The callable to be added/removed will be passed through the "value" parameter. Notice in this example "value" parameter doesn't have any type annotation, this is only to keep this first example "simple/readable" at first sight, however is HIGHLY RECOMMENDED annotate the type as the following examples (Events with arguments or Events with modifiable arguments), due this is the way to indicate clearly what is the signature expected from the event to their subcribers (callables).
+The callable to be added/removed will be passed through the "value" parameter. Notice in this example "value" parameter doesn't have any type annotation, this is only to keep this first example "simple/readable" at first sight, however it is **HIGHLY RECOMMENDED** annotate the type as the following examples on this document (Events with arguments or Events with modifiable arguments examples contain these annnotations), due this is the way to indicate clearly what is the signature expected from the event to their subcribers (callables). [Link to event annotation convention explanation](#event-annotation-convention)
 
 Once this is in place, we have:
 
 - A place to store the callables 
 - Logic to let to other parts of the code add/remove callables
 
-Now we need to execute the callables in the right momment, in this case the event is called "NameChanged" so the callables should be executed when the name changes, this means our extra logic needs to be added in the Name setter due that is the part of the code that has this responsability (change the person's name).
+Now we need to execute the callables in the right momment, in this case the event is called "name_changed" so the callables should be executed when the name changes, this means our extra logic needs to be added in the *name* setter due that is the part of the code that has this responsability (change the person's name).
 
 ```python
-      @Name.setter 
-      def Name(self,value:str)->None:
-        self._name = value
-        # execute our "To do list" or delegate
+  @name.setter 
+  def name(self,value:str)->None:
+    self._name = value
+    # execute our "To do list" or delegate
 ```
 
-In the snippet code above the comment defines where the "To do list" needs to be executed, however, sometimes the own object needs to implement its own logic when (in this case) the property Name change, for this purpose is HIGHLY RECOMMENDED as a good practice define another function/method called "_On[EVENT NAME]"
+In the snippet code above the comment defines where the "To do list" needs to be executed, however, sometimes the own object needs to implement its own logic when (in this case) the property *name* change, for this purpose is **HIGHLY RECOMMENDED** as a good practice define another function/method called "\_on\_[EVENT NAME]"
 
 ```python
-      @Name.setter 
-      def Name(self,value:str)->None:
-        self._name = value
-        self._OnNameChanged()
+  @name.setter 
+  def name(self,value:str)->None:
+    self._name = value
+    self._on_name_changed()
 
-      def _OnNameChanged(self)->None:
-        #logic when the name change (if any)
-        self._namechanged_callbacks() #external logic
+  def _on_name_changed(self)->None:
+    #logic when the name change (if any)
+    self._name_changed() #external logic
 ```
 Inside of this method the own internal and external logic when the name change must be implemented, in other words, *What as a Person I need to do when my name changes?* (own/internal logic), and after, attend external logic (To do list) in other words instructionss provided by other objects or parts of the code. *What others needs to do when my name changes?*
 
 In this case the class Person doesn't need to do "something" when the name changes (internal logic), so we only need to execute the external logic (execute the delegate)
 
 
-Now we have a way to add/remove subscribers and trigger the event, however, you might notice the code above is not exactly the same as the example code, this is because despite the event is now implemented and working is not following a good practice CONVENTION. So even with a working code, is HIGHLY RECOMMENDED follow next convention:
+Now we have a way to add/remove subscribers and trigger the event, however, you might notice the code above is not exactly the same as the example code, this is because despite the event is now implemented and working is not following a good practice CONVENTION. So even with a working code, is **HIGHLY RECOMMENDED** follow next convention:
 
 ```python
-      @Name.setter 
-      def Name(self,value:str)->None:
-        self._name = value
-        self._OnNameChanged(EventArgs())
+  @name.setter 
+  def name(self,value:str)->None:
+    self._name = value
+    self._on_name_changed(EventArgs())
 
-      def _OnNameChanged(self,e:EventArgs)->None:
-        #internal logic if any
-        self._namechanged_callbacks(self,e)
+  def _on_name_changed(self,e:EventArgs)->None:
+    #internal logic if any
+    self._name_changed(self,e)
 ```
 
 You can notice 2 things
 
-1. *_OnNameChanged* now requires a parametter called 'e' which is an EventArgs, this is a safety implementation, every "_On[EVENT NAME]" must require an EventArgs (or any other class that inherits from it), this is a way to say "Are you sure the event happens? show me the evidence!", in this case there is no arguments so the evidence is an empty EventArgs object. EventArgs object is used first for the internal logic and then passed to the external logic as a parameter.
+1. *\_on\_name_changed* now requires a parametter called 'e' which is an EventArgs, this is a safety implementation, every "\_on\_[EVENT NAME]" must require an EventArgs (or any other class that inherits from it), this is a way to say "Are you sure the event happens? show me the evidence!", in this case there is no arguments so the evidence is an empty *EventArgs* object. *EventArgs* object is used first for the internal logic and then passed to the external logic as a parameter.
 
 2. 'self' is passed to the external logic as first parameter, this is to allow the subcribers know 'Who is executing my piece of code"
 
@@ -446,99 +486,103 @@ You can notice 2 things
     1. Part that store and define how to add/remove callables
     2. Part that executes/trigger those callables stored
 
-- There are conventions about how the logic must be implemented to facilitate reading and maintenance of the code.
+<a id="event-annotation-convention"></a>
+- There are conventions about how the logic must be implemented to facilitate readability and maintenance of the code.
 
 - Callables to be subscribed to a simple event should follow the next signature:
 
     *Callable[[object, EventArgs], None]* (a callable with 2 parameters, first one contains the publisher and second the event arguments, the function must return None)
 
-The next snipped code shows and example of how the *simple events* should be implemented with the recomended annotation: 
+The next snipped code shows and example of how the *simple events* should be implemented with the **HIGHLY RECOMMENDED** event annotation convention: 
 
 ```python
-      @event 
-      def NameChanged(self,value:Callable[[object, EventArgs], None])->None:
-        self._namechanged_callbacks += value
+  @event 
+  def name_changed(self,value:Callable[[object, EventArgs], None])->None:
+    self._name_changed += value
 
-      @NameChanged.remove
-      def NameChanged(self,value:Callable[[object, EventArgs], None])->None:
-        self._namechanged_callbacks -= value 
+  @name_changed.remove
+  def name_changed(self,value:Callable[[object, EventArgs], None])->None:
+    self._name_changed -= value 
 ```
 
 This is done with the intention of clarify what is the event expecting from its subscribers signature.
+
+The omission of this event annotation convention do not affect how the code works, however, it could lead to problems of readability, clarity, maintenance and scalability. For these reasons **ALWAYS** place the event annotations, this is the only way for the event to communicate what is he expecting from its subscribers.
 
 
 To use the event:
 
 ```python
-    def person_NameChanged(sender:object,e:EventArgs)->None: #function to be executed when the name changes (subscriber)
-      print("person change its name to %s" % sender.Name)
+def person_name_changed(sender:object,e:EventArgs)->None: #function to be executed when the name changes (subscriber)
+  print("person change its name to %s" % sender.name)
 
-    person = Person("Juan")  #creates a person
-    person.NameChanged += person_NameChanged # we add 'person_NameChanged' (subcriber) to event NameChanged of 'person', this line will execute function under @event decorator (add function)
-    person.Name = "Carlos" # change the name to trigger the event (this will execute 'person_NameChanged') 
-    person.NameChanged -= person_NameChanged #unsubcribe the function, this line will execute function under @NameChanged.remove decorator (remove function)
-    person.Name = "Something" # change the name again to prove 'person_NameChanged' is not executed anymore
+person = Person("Juan")  #creates a person
+person.name_changed += person_name_changed # we add 'person_name_changed' (subcriber) to event name_changed of 'person', this line will execute function under @event decorator (add function)
+person.name = "Carlos" # change the name to trigger the event (this will execute 'person_name_changed') 
+person.name_changed -= person_name_changed #unsubcribe the function, this line will execute function under @name_changed.remove decorator (remove function)
+person.name = "Something" # change the name again to prove 'person_name_changed' is not executed anymore
 ```
 
 
 ##### Events with arguments
 
   ```python
-    from python_sharp import *
-    from typing import Callable
+  from python_sharp import *
+  from typing import Callable
 
-    class MovedEventArgs(EventArgs):
+  class MovedEventArgs(EventArgs):
 
-        _delta:int
+    _delta:int
 
-        def __init__(self,delta:int)->None:
-            super().__init__()
-            self._delta = delta
+    def __init__(self,delta:int)->None:
+      super().__init__()
+      self._delta = delta
 
-        @property
-        def Delta(self)->int:
-            return self._delta
+    @property
+    def delta(self)->int:
+      return self._delta
 
-    class Person:
+
+  class Person:
     
-        def __init__(self)->None:
-            self._location = 0
-            self._movedcallbacks = Delegate()
+    def __init__(self)->None:
+      self._location = 0
+      self._moved = Delegate()
 
-        @property
-        def Location(self)->int:
-            return self._location
+    @property
+    def location(self)->int:
+      return self._location
 
-        @Location.setter
-        def Location(self,value:int)->None:      
-            previous = self.Location 
-            self._location = value
-            self._OnMoved(MovedEventArgs(self.Location - previous))
+    @location.setter
+    def location(self,value:int)->None:      
+      previous = self.location 
+      self._location = value
+      self._on_moved(MovedEventArgs(self.location - previous))
 
-        def Move(self,distance:int)->None:
-            self.Location += distance
+    def move(self,distance:int)->None:
+      self.location += distance
 
-        def _OnMoved(self,e:MovedEventArgs)->None:
-            self._movedcallbacks(self,e)
+    def _on_moved(self,e:MovedEventArgs)->None:
+      self._moved(self,e)
 
-        @event 
-        def Moved(self,value:Callable[[object, MovedEventArgs], None])->None:
-            self._movedcallbacks += value
+    @event 
+    def moved(self,value:Callable[[object, MovedEventArgs], None])->None:
+      self._moved += value
 
-        @Moved.remove
-        def Moved(self,value:Callable[[object, MovedEventArgs], None])->None:
-           self._movedcallbacks -= value  
+    @moved.remove
+    def moved(self,value:Callable[[object, MovedEventArgs], None])->None:
+      self._moved -= value  
 
 
-    def person_Moved(sender:object,e:MovedEventArgs)->None:
-      print("Person moves %d units" % e.Delta)
+  def person_moved(sender:object,e:MovedEventArgs)->None:
+    print("Person moves %d units" % e.delta)
 
-    person = Person()
-    person.Move(15)
-    person.Moved += person_moved
-    person.Location = 25
-    person.Moved -= person_moved
-    person.Location = 0
+  person = Person()
+  person.move(15)
+  person.moved += person_moved
+  person.location = 25
+  person.moved -= person_moved
+  person.location = 0
   ```
 
   OUTPUT
@@ -548,67 +592,121 @@ To use the event:
 
 *Events with arguments* are almost the same as *simple events* so, the next explanation will only address the differences between the 2 cases.
 
-On this example an event named "Moved" is implemented to notify when a person moves and provide how much does the person move.
+On this example an event named "moved" is implemented to notify when a person moves and provide how much does the person move.
 
 ```python
-    class MovedEventArgs(EventArgs):
+class MovedEventArgs(EventArgs):
 
-        _delta:int
+  _delta:int
 
-        def __init__(self,delta:int)->None:
-            super().__init__()
-            self._delta = delta
+  def __init__(self,delta:int)->None:
+    super().__init__()
+    self._delta = delta
 
-        @property
-        def Delta(self)->int:
-            return self._delta
+  @property
+  def delta(self)->int:
+    return self._delta
 ```
 
-In this case a custom EventArgs is created in order to be capable of store the event arguments, on this example the event is named "Moved", and is going to be triggered when the person changes its location, in addition, it will provide HOW MUCH the person moves, this is the job of the *MovedEventArgs* and the main difference with a *simple event*.
+In this case a custom EventArgs is created in order to be capable of store the event arguments, on this example the event is named "moved", and is going to be triggered when the person changes its location, in addition, it will provide HOW MUCH the person moves, this is the job of the *MovedEventArgs* and the main difference with a *simple event*.
 
 In the next code block we can see how the event is being defined:
 
 ```python
-        @event 
-        def Moved(self,value:Callable[[object, MovedEventArgs], None])->None:
-            self._movedcallbacks += value
+  @event 
+  def moved(self,value:Callable[[object, MovedEventArgs], None])->None:
+    self._moved += value
 
-        @Moved.remove
-        def Moved(self,value:Callable[[object, MovedEventArgs], None])->None:
-           self._movedcallbacks -= value  
+  @moved.remove
+  def moved(self,value:Callable[[object, MovedEventArgs], None])->None:
+    self._moved -= value  
 ```
 
 in this case the only difference is the 'value' parameter annotation,  this indicates that the event requieres a *Callable[[object, MovedEventArgs], None]* subscriber signature, in other words a *MovedEventArgs* will be provided to the subscriber.
 
-It is HIGHLY IMPORTANT to realize *Moved* event signature is *Callable[[object, MovedEventArgs], None]* therefore it can accept subscribers with the next signatures:
+It is **HIGHLY IMPORTANT** to realize *moved* event signature is *Callable[[object, MovedEventArgs], None]* therefore it can accept subscribers with the next signatures:
 
 - *Callable[[object, MovedEventArgs], None]*
 - *Callable[[object, EventArgs], None]*
 
-This 2 signatures are ok due polimorfism, it can be confusing due at first sight seems like we are asigning an *EventArgs* to a *MovedEventArgs* (*MovedEventArgs* <- *EventArgs*), this case is not valid, due it might throw a Traceback if a *MovedEventArgs* member is trying to be acceses into a *EventArgs* object. However in this example case is not the same,
-the subscriber with *Callable[[object, EventArgs], None]* signature defines how the paramater object is going to be treated by the callable, in this case, the parameter will be used/treated as an *EventArgs*, and the event will provide a *MovedEventArgs* object to the callable so in reallity we are asigning a *MovedEventArgs* object to an *EventArgs* variable (*EventArgs* <- *MovedEventArgs*) wich by polimorfism will not cause any issue trying to access any of the *EventArgs* members.
+This 2 signatures are ok due polimorfism, it can be confusing due at first sight seems like we are asigning an *EventArgs* objeect to a *MovedEventArgs* variable (*MovedEventArgs* <- *EventArgs*), this case in OOP (Object Oriented programing) is not valid, due it might throw a Traceback if a *MovedEventArgs* member is trying to be accessed in a *EventArgs* object. 
 
-Next diagram explains a general case for what was explained above (event subscriber signatures accepted by an event):
+However in this example is not the case, the subscriber with *Callable[[object, EventArgs], None]* signature defines how the paramater object is going to be treated by the callable, in this case, the parameter will be used/treated as an *EventArgs*, and the event will provide a *MovedEventArgs* object to the callable so in reallity we are asigning a *MovedEventArgs* object to an *EventArgs* variable (*EventArgs* <- *MovedEventArgs*) which by polimorfism will not cause any issue trying to access any of the *EventArgs* members in a *MovedEventArgs* object.
 
-<img src="./documentation_images/event_assignament_example.png" width="100%">
+Next code block explains a general case for what was explained above (subscriber signatures accepted by an event).
 
-
-And the last difference but not less important is how the event is going to be trigerred:
+"..." indicates that there is code is being omitted due it is not relevant to show the desire concept:
 
 ```python
-        @Location.setter
-        def Location(self,value:int)->None:      
-            previous = self.Location 
-            self._location = value
-            self._OnMoved(MovedEventArgs(self.Location - previous))
+class EventArgs:...
+class FirstCustomEventArgs(EventArgs):...
+class SecondCustomEventArgs(FirstCustomEventArgs):...
+class ThirdCustomEventArgs(SecondCustomEventArgs):...
+class FourthCustomEventArgs(ThirdCustomEventArgs):...
+class FifthCustomEventArgs(FourthCustomEventArgs):...
 
-        def _OnMoved(self,e:MovedEventArgs)->None:
-            self._movedcallbacks(self,e)
+class MyClassPublisher:
+
+  @event
+  def event_name(self,value:Callable[[object,ThirdCustomEventArgs],None])->None:... #Example event that will provide a ThirdCustomEventArgs object to its subcribers.
+  ...
+
+
+def subscriber(sender:object,e:EventArgs)->None: ...                # Asignable
+def subscriber_1(sender:object,e:FirstCustomEventArgs)->None: ...   # Asignable
+def subscriber_2(sender:object,e:SecondCustomEventArgs)->None: ...  # Asignable
+def subscriber_3(sender:object,e:ThirdCustomEventArgs)->None: ...   # Asignable
+def subscriber_4(sender:object,e:FourthCustomEventArgs)->None: ...  # NO asignable
+def subscriber_5(sender:object,e:FifthCustomEventArgs)->None: ...   # NO asignable
+
+
+publisher = new MyClassPublisher()
+
+publisher.event_name += subscriber    # Correct
+publisher.event_name += subscriber_1  # Correct
+publisher.event_name += subscriber_2  # Correct
+publisher.event_name += subscriber_3  # Correct
+publisher.event_name += subscriber_4  # Wrong
+publisher.event_name += subscriber_5  # Wrong
+
 ```
 
-We can see in the code block above now *_OnMoved* method now requires a *MovedEventArgs*, as *simple events* did, this is for security reasons, if we are going to execute *_OnMoved* method because the event happens, that is a way to say "prove it or show the evidence!".
+This feature allow you to have a subscriber being able to subscribe to a huge variety of event signatures, for example, if you have a piece of logic that needs to be executed by 2 events with different signatures is totally possible.
 
-Second difference is when *Location* settter is calling *_OnMoved* method, now it needs to create an instance of *MovedEventArgs* and to do so, it requieres a quantity to be passed to the constructor, this quantity of "how much the person moves" can be calculated with a substraction of previous and current location.
+In order to get advantage of this, you need to keep in mind what is going to be the subcriber signature, if your subcriber signature is closer to *EventArgs* it is going to be more probable to be compatible with more event signatures. So as a good practice try to keep your *EventArgs* parameter as close as *EventArgs* possible.
+
+Example:
+
+If you create a subcriber for an event with a signature *Callable[[object, ThirdCustomEventArgs],None]* and you do not need any specific information of a *ThirdCustomEventArgs* in your subsciber logic, you can consider lower your *EventArgs* to *SecondCustomEventArgs* (get closer to *EcentArgs*) or even lower, depending on what information you require in your subscriber logic, in this way your subcriber will be compatible with more event signatures in case you want to assign it to another events with different signature.
+
+
+Subscribers naming convention is not rigid, however it is **HIGHLY RECOMMENDED** that the name expresses in some way what is going to trigger its execution, most of the cases can be accomplish with:
+
+ "[your identifier]_[event name(s)]"
+
+ - persons_name_changed
+ - elements_moved
+ - compenents_rendering
+
+ In that way is easy to understand/know what is going to cause the subscriber execution due its name contains the name of its triggers (event names).
+
+
+And the last difference but not less important is how the event is going to be triggered:
+
+```python
+  @location.setter
+  def location(self,value:int)->None:      
+    previous = self.location 
+    self._location = value
+    self._on_moved(MovedEventArgs(self.location - previous))
+
+  def _on_moved(self,e:MovedEventArgs)->None:
+    self._moved(self,e)
+```
+
+We can see in the code block above now *\_on\_moved* method now requires a *MovedEventArgs*, as *simple events* did, this is for security reasons, if we are going to execute *\_on\_moved* method because the event happens, that is a way to say "prove it or show the evidence!".
+
+Second difference is when *location* settter is calling *\_on\_moved* method, now it needs to create an instance of *MovedEventArgs* and to do so, it requieres a quantity to be passed to the constructor, this quantity of "how much the person moves" can be calculated with a substraction of previous and current location.
 
 
 **As summary:** 
@@ -617,75 +715,74 @@ Second difference is when *Location* settter is calling *_OnMoved* method, now i
 
 - Needs a custom *EventArgs* class defined.
 - Events with custom *EventArgs* can accept different subscriber signatures
-- _On[Event name] method uses the custom *EventArgs* class and this causes an extra security layer
+- \_on\_[Event name] method uses the custom *EventArgs* class and this causes an extra security layer
 - Trigger code now needs to create an instance of the new custom *EventArgs* and to do so, it needs to provide/calculate the arguments needed by the custom *EventArgs* constructor
 
 
 ##### Events with modifiable arguments 
 
   ```python
-    from python_sharp import *
-    from typing import Callable
+  from python_sharp import *
+  from typing import Callable
 
-    class LocationChangingEventArgs(CancellableEventArgs):
+  class LocationChangingEventArgs(CancellableEventArgs):
 
-        _value:int
+    _value:int
 
-        def __init__(self,value:int)->None:
-            super().__init__()
-            self._value = value
+    def __init__(self,value:int)->None:
+      super().__init__()
+      self._value = value
 
-        @property
-        def Value(self)->int:
-            return self._value
+    @property
+    def value(self)->int:
+      return self._value
 
-    class Person:
+
+  class Person:
     
-      def __init__(self)->None:
-        self._location = 0
-        self._locationChangingcallbacks = Delegate()
+    def __init__(self)->None:
+      self._location = 0
+      self._location_changing = Delegate()
 
-        @property
-        def Location(self)->int:
-            return self._location
+    @property
+    def location(self)->int:
+      return self._location
 
-        @Location.setter
-        def Location(self,value:int)->None:
+    @location.setter
+    def location(self,value:int)->None:
+      locationEventArgs = LocationChangingEventArgs(value)
+      self._on_location_changing(locationEventArgs)
 
-            locationEventArgs = LocationChangingEventArgs(value)
-            self._OnLocationChanging(locationEventArgs)
-
-            if(not locationEventArgs.Cancel):
-                self._location = value
-
-
-        def _OnLocationChanging(self,e:LocationChangingEventArgs)->None:
-            self._locationChangingcallbacks(self,e)
+      if(not locationEventArgs.cancel):
+        self._location = value
 
 
-        @event
-        def LocationChanging(self,value:Callable[[object, LocationChangingEventArgs], None])->None:
-            self._locationChangingcallbacks += value
-
-        @LocationChanging.remove
-        def LocationChanging(self,value:Callable[[object, LocationChangingEventArgs], None])->None:
-           self._locationChangingcallbacks -= value
+    def _on_location_changing(self,e:LocationChangingEventArgs)->None:
+      self._location_changing(self,e)
 
 
-    def person_LocationChanging(sender:object,e:LocationChangingEventArgs):
-      if e.Value > 100:
-        e.Cancel = True
+    @event
+    def location_changing(self,value:Callable[[object, LocationChangingEventArgs], None])->None:
+      self._location_changing += value
 
-    person = Person()
-    person.Location = 50
-    person.LocationChanging += person_LocationChanging
-    person.Location = 150
-    print(person.Location)
+    @location_changing.remove
+    def location_changing(self,value:Callable[[object, LocationChangingEventArgs], None])->None:
+      self._location_changing -= value
 
+
+  def person_location_changing(sender:object,e:LocationChangingEventArgs):
+    if e.value > 100:
+      e.cancel = True
+
+  person = Person()
+  person.location = 50
+  person.location_changing += person_location_changing
+  person.location = 150
+  print(person.location)
   ```
 
  OUTPUT
- ```python
+ ```
  50
  ```
 
@@ -693,38 +790,40 @@ Second difference is when *Location* settter is calling *_OnMoved* method, now i
 
 *Events with modifiable arguments* are most likely implemented as **pre-events** this means the event advertise something that is about to happen, and it will let the subscribers provide information (Thorugh a custom *EventArgs*) to determine the future, like cancelling what was about to happen or modify how it was going to be done.
 
-On this example an event named "LocationChanging" is implemented to notify when the person's location is about to be changed, this will let the subscribers cancel or modify the future behaviour of that action.
+On this example an event named "location_changing" is implemented to notify when the person's location is about to be changed, this will let the subscribers cancel or modify the future behaviour of that action.
 
 Key difference is the way the custom *EventArgs* is defined:
 
 ```python
 class CancellableEventArgs(EventArgs): #Defined already on python_sharp module
-    _cancel:bool
+  
+  _cancel:bool
 
-    def __init__(self)->None:
-        super().__init__()
-        self._cancel = False 
+  def __init__(self)->None:
+    super().__init__()
+    self._cancel = False 
 
     
-    @property
-    def Cancel(self)->bool:
-        return self._cancel
+  @property
+  def cancel(self)->bool:
+    return self._cancel
     
-    @Cancel.setter
-    def Cancel(self,value:bool)->None:
-        self._cancel = value
+  @cancel.setter
+  def cancel(self,value:bool)->None:
+    self._cancel = value
+
 
 class LocationChangingEventArgs(CancellableEventArgs):
 
-        _value:int
+  _value:int
 
-        def __init__(self,value:int)->None:
-            super().__init__()
-            self._value = value
+  def __init__(self,value:int)->None:
+    super().__init__()
+    self._value = value
 
-        @property
-        def Value(self)->int:
-            return self._value
+  @property
+  def value(self)->int:
+    return self._value
 ```
 
 As you can see our custom *EventArgs* is *LocationChangingEventArgs* this class inherits from *CancellableEventArgs*, an *IMPORTANT* remark is Inherit from *CancellableEventArgs* is not necessary to create an *Event with modifiable argument*. *CancellableEventArgs* is just a built in custom *EventArgs* used for *Event with modifiable argument*, the fact *LocationChangingEventArgs* inherits from it is just to show case a use of it.
@@ -733,29 +832,38 @@ Key factor to know when an event is an *Event with modifiable argument* is if th
 
 *LocationChangingEventArgs* does not contain a property with a setter by itself, but due it inherits from an *EventArgs* which contains it (*CancellableEventArgs*), we can consider that *LocationChangingEventArgs* actually contains a property with a setter.
 
-For this particular example *Cancel* property is set to *False* by default, when the  *EventArgs* object is passed to the subscribers now they have the ability to change *Cancel* value property:
+For this particular example *cancel* property is set to *False* by default, when the  *EventArgs* object is passed to the subscribers now they have the ability to change *cancel* value property:
 
 ```python
-    def person_LocationChanging(sender:object,e:LocationChangingEventArgs):
-      if e.Value > 100:
-        e.Cancel = True
+def person_location_changing(sender:object,e:LocationChangingEventArgs):
+  if e.value > 100:
+    e.cancel = True
 ```
 
-In the code block above is shown how the subscriber uses *e.Value* to determine if *e.Cancel* is going to be set to *True*, subsequently the publisher can use this value to modify some behaviour:
+In the code block above is shown how the subscriber uses *e.value* to determine if *e.cancel* is going to be set to *True*, subsequently the publisher can use this value to modify some behaviour:
 
 ```python
-        @Location.setter
-        def Location(self,value:int)->None:
+  @location.setter
+  def location(self,value:int)->None:
+    locationEventArgs = LocationChangingEventArgs(value)
+    self._on_location_changing(locationEventArgs)
 
-            locationEventArgs = LocationChangingEventArgs(value)
-            self._OnLocationChanging(locationEventArgs)
-
-            if(not locationEventArgs.Cancel):
-                self._location = value
+    if(not locationEventArgs.cancel):
+      self._location = value
 ```
 
-Code above shows how the *LocationChangingEventArgs* is created and stored in *locationEventArgs* variable in order to keep a reference to the object, once that is done, the *LocationChangingEventArgs* object is send to *_OnLocationChanging* method to execute internal and external logic (external logic will execute all subscribers that might change *Cancel* property value), and at the end of the  *_OnLocationChanging* execution we can check the *locationEventArgs* variable to evaluate if the *LocationChangingEventArgs* object *Cancel* property is *True* or *False*, with this value we can alter the code behaviour. For this particular example *Cancel* property is being use to determine if the person should change its location or not
+Code above shows how the *LocationChangingEventArgs* is created and stored in *locationEventArgs* variable in order to keep a reference to the object, once that is done, the *LocationChangingEventArgs* object is send to *\_on\_location_changing* method to execute internal and external logic (external logic will execute all subscribers that might change *cancel* property value), and at the end of the  *\_on\_location_changing* execution we can check the *locationEventArgs* variable to evaluate if the *LocationChangingEventArgs* object *cancel* property is *True* or *False*, with this value we can alter the code behaviour. For this particular example *cancel* property is being use to determine if the person should change its location or not
 
+
+##### Implementation summary
+
+In the Implementation section there were examples about how to implement every single "flavor"/type of event, however the subcribers shown in those examples where a simple function that matches the event signature to keep the examples as understanding as possible. 
+
+It is important to remember that:
+
+- A subscriber can be subscribed to diferent event signatures
+- you can subscribe any callable to an event: function, method, class with \_\_call\_\_ implemented or even another delegate.
+- When a class contains a callable that is going to be subscribed to an event, and the subscription (+= operator over the event) is going to happen inside of the same class, is **HIGHLY RECOMMENDED** to keep the subscriber protected with "_" at the begging of the subscriber identifier if the logic contained there is only of the class interest (only the class makes use of that logic).
 
 ### Static events
 
@@ -771,40 +879,56 @@ Now imagine we want to notify when an instance is created, in other words when t
 from python_sharp import *
 
 class Person:
-    _instance_created:int = 0
-    _personCreatedcallbacks:Delegate = Delegate()
-
-    def __init__(self)->None:
-        Person._OnPersonCreated(EventArgs())
-
-    @staticmethod
-    def get_InstanceCreated()->int:
-        return Person._instance_created
     
-    @staticmethod
-    def _set_InstanceCreated(value:int)->None:
-        Person._instance_created = value
+  _instance_created:int = 0
+  _person_created:Delegate = Delegate()
+
+  def __init__(self)->None:
+    Person._on_person_created(EventArgs())
+
+  @staticmethod
+  def get_instance_created()->int:
+    return Person._instance_created
+    
+  @staticmethod
+  def _set_instance_created(value:int)->None:
+    Person._instance_created = value
 
 
-    @staticmethod
-    def _OnPersonCreated(e:EventArgs)->None:
-        Person._set_InstanceCreated(Person.get_InstanceCreated() + 1)
-        Person._personCreatedcallbacks(None,e)
+  @staticmethod
+  def _on_person_created(e:EventArgs)->None:
+    Person._set_instance_created(Person.get_instance_created() + 1)
+    Person._person_created(None,e)
         
-    @staticevent
-    def PersonCreated(value:Callable[[object, EventArgs], None])->None:
-        Person._personCreatedcallbacks += value
+  @staticevent
+  def person_created(value:Callable[[object, EventArgs], None])->None:
+    Person._person_created += value
 
-    @PersonCreated.remove
-    def PersonCreated(value:Callable[[object, EventArgs], None])->None:
-        Person._personCreatedcallbacks -= value
+  @person_created.remove
+  def person_created(value:Callable[[object, EventArgs], None])->None:
+    Person._person_created -= value
+
+def person_created(sender:object,e:EventArgs)->None:
+  print("There are %d persons created" % Person.get_instance_created())
+
+person_1 = Person()
+person_2 = Person()
+
+Person.person_created += person_created
+
+person_3 = Person()
 ```
 
-As you can see a *simple event* implementations is almost identical to *simple static event*
+OUTPUT
+```
+There are 3 persons created
+```
+
+As you can see a *simple event* implementation is almost identical to *simple static event*
 
 Key differences:
 
 - All members used (variable, methods and event) are static (use of @staticevent instead of @event)
 - Get/Set methods to encapsulate the static variable are implemented as static methods due a lack of static properties python implementation
 
-And that is it, those are all difference, so if you have questions about how this code works, is HIGHLY RECOMMENDED go back to [Events](#Events) section.
+And that is it, those are all differences, so if you have questions about how this code works, is **HIGHLY RECOMMENDED** go back to [Events](#Events) section or raise a question on the [issues](https://github.com/juanclopgar97/python_sharp/issues) section of this repository.

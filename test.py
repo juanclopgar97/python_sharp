@@ -11,7 +11,7 @@ class MovedEventArgs(EventArgs):
         self._delta = delta
 
     @property
-    def Delta(self)->int:
+    def delta(self)->int:
         return self._delta
 
 
@@ -24,7 +24,7 @@ class LocationChangingEventArgs(CancellableEventArgs):
         self._location = location
 
     @property
-    def Location(self)->int:
+    def location(self)->int:
         return self._location
 
 
@@ -33,142 +33,142 @@ class LocationChangingEventArgs(CancellableEventArgs):
 class Person:
 
     _instance_created:int = 0
-    _personCreatedcallbacks:Delegate = Delegate()
+    _person_created:Delegate = Delegate()
 
     _name:str
     _alive:bool
     _location:int
-    _nameChangedcalbacks:Delegate
-    _movedcallbacks:Delegate
-    _locationChangingcallbacks:Delegate
-    _diedcallbacks:Delegate
+    _name_changed:Delegate
+    _moved:Delegate
+    _location_changing:Delegate
+    _died:Delegate
 
     def __init__(self,name:str)->None:
         self._name = name
         self._alive = True
         self._location = 0
-        self._nameChangedcalbacks = Delegate()
-        self._movedcallbacks = Delegate()
-        self._locationChangingcallbacks = Delegate()
-        self._diedcallbacks = Delegate()
-        Person._OnPersonCreated(EventArgs())
+        self._name_changed = Delegate()
+        self._moved = Delegate()
+        self._location_changing = Delegate()
+        self._died = Delegate()
+        Person._on_person_created(EventArgs())
         
 # region Properties
 
     @property
-    def Name(self)->str: 
+    def name(self)->str: 
         return self._name
                
-    @Name.setter 
-    def Name(self,value:str)->None:
+    @name.setter 
+    def name(self,value:str)->None:
         self._name = value
-        self._OnNameChanged(EventArgs()) 
+        self._on_name_changed(EventArgs()) 
 
      
     @property
-    def Alive(self)->bool:
+    def alive(self)->bool:
         return self._alive
     
 
     @property
-    def Location(self)->int:
+    def location(self)->int:
         return self._location
     
-    @Location.setter
-    def Location(self,value:int)->None:
+    @location.setter
+    def location(self,value:int)->None:
         
         locationEventArgs = LocationChangingEventArgs(value)
-        self._OnLocationChanging(locationEventArgs)
+        self._on_location_changing(locationEventArgs)
         
-        if(not locationEventArgs.Cancel):
-            previous = self.Location 
+        if(not locationEventArgs.cancel):
+            previous = self.location 
             self._location = value
-            self._OnMoved(MovedEventArgs(self.Location - previous))
+            self._on_moved(MovedEventArgs(self.location - previous))
 
 
     @staticmethod
-    def get_InstanceCreated()->int:
+    def get_instance_created()->int:
         return Person._instance_created
     
     @staticmethod
-    def _set_InstanceCreated(value:int)->None:
+    def _set_instance_created(value:int)->None:
         Person._instance_created = value
 
 # endregion
 
 # region  Methods
    
-    def _OnNameChanged(self,e:EventArgs)->None:
-        self._nameChangedcalbacks(self,e)
+    def _on_name_changed(self,e:EventArgs)->None:
+        self._name_changed(self,e)
     
-    def _OnLocationChanging(self,e:LocationChangingEventArgs)->None:
-        self._locationChangingcallbacks(self,e)
+    def _on_location_changing(self,e:LocationChangingEventArgs)->None:
+        self._location_changing(self,e)
 
-    def _OnMoved(self,e:MovedEventArgs)->None:
-        self._movedcallbacks(self,e)          
+    def _on_moved(self,e:MovedEventArgs)->None:
+        self._moved(self,e)          
         
-    def _OnDied(self,e:EventArgs)->None:
-        self._diedcallbacks(self,e)   
+    def _on_died(self,e:EventArgs)->None:
+        self._died(self,e)   
 
-    def Move(self,distance:int)->None:
-        self.Location += distance
+    def move(self,distance:int)->None:
+        self.location += distance
 
     @staticmethod
-    def _OnPersonCreated(e:EventArgs)->None:
-        Person._set_InstanceCreated(Person.get_InstanceCreated() + 1)
-        Person._personCreatedcallbacks(None,e)
+    def _on_person_created(e:EventArgs)->None:
+        Person._set_instance_created(Person.get_instance_created() + 1)
+        Person._person_created(None,e)
 
-    def Kill(self)->None:
+    def kill(self)->None:
         self._alive = False
-        self._OnDied(EventArgs())
+        self._on_died(EventArgs())
 
 # endregion
 
 # region Events
     
     @event  #Simplest event, just notify something happens, no provide extra information about the event (like why,how,when), no recolection of information from suscribers
-    def NameChanged(self,value: Callable[[object, EventArgs], None])->None:
-        self._nameChangedcalbacks += value 
+    def name_changed(self,value: Callable[[object, EventArgs], None])->None:
+        self._name_changed += value 
         
-    @NameChanged.remove
-    def NameChanged(self,value: Callable[[object, EventArgs], None])->None:
-       self._nameChangedcalbacks -= value
+    @name_changed.remove
+    def name_changed(self,value: Callable[[object, EventArgs], None])->None:
+       self._name_changed -= value
 
 
     @event  #event with custom EventArgs, notify something happens and provides extra information (like why,how,when),  no recolection of information from suscribers
-    def Moved(self,value:Callable[[object, MovedEventArgs], None])->None:
-        self._movedcallbacks += value
+    def moved(self,value:Callable[[object, MovedEventArgs], None])->None:
+        self._moved += value
     
-    @Moved.remove
-    def Moved(self,value:Callable[[object, MovedEventArgs], None])->None:
-       self._movedcallbacks -= value  
+    @moved.remove
+    def moved(self,value:Callable[[object, MovedEventArgs], None])->None:
+       self._moved -= value  
 
 
     @event  #event with custom EventArgs, notify something happens provides extra information (like why,how,when), and it is capable of recolect info from its suscribers (this case implemeted as prevent)
-    def LocationChanging(self,value:Callable[[object, LocationChangingEventArgs], None])->None:
-        self._locationChangingcallbacks += value
+    def location_changing(self,value:Callable[[object, LocationChangingEventArgs], None])->None:
+        self._location_changing += value
     
-    @LocationChanging.remove
-    def LocationChanging(self,value:Callable[[object, LocationChangingEventArgs], None])->None:
-       self._locationChangingcallbacks -= value
+    @location_changing.remove
+    def location_changing(self,value:Callable[[object, LocationChangingEventArgs], None])->None:
+       self._location_changing -= value
 
 
     @event
-    def Died(self,value:Callable[[object, EventArgs], None])->None:
-        self._diedcallbacks += value
+    def died(self,value:Callable[[object, EventArgs], None])->None:
+        self._died += value
     
-    @Died.remove
-    def Died(self,value:Callable[[object, EventArgs], None])->None:
-        self._diedcallbacks -= value
+    @died.remove
+    def died(self,value:Callable[[object, EventArgs], None])->None:
+        self._died -= value
 
 
     @staticevent
-    def PersonCreated(value:Callable[[object, EventArgs], None])->None:
-        Person._personCreatedcallbacks += value
+    def person_created(value:Callable[[object, EventArgs], None])->None:
+        Person._person_created += value
 
-    @PersonCreated.remove
-    def PersonCreated(value:Callable[[object, EventArgs], None])->None:
-        Person._personCreatedcallbacks -= value
+    @person_created.remove
+    def person_created(value:Callable[[object, EventArgs], None])->None:
+        Person._person_created -= value
 
 # endregion
 
@@ -182,42 +182,42 @@ class School:
         self._principal = None
 
     @property
-    def Name(self)->str: 
+    def name(self)->str: 
         return self._name
                
-    @Name.setter 
-    def Name(self,value:str)->None:
+    @name.setter 
+    def name(self,value:str)->None:
         self._name = value
 
 
     @property
-    def Principal(self)->Person: 
+    def principal(self)->Person: 
         return self._principal
                
-    @Principal.setter 
-    def Principal(self,value:Person)->None:
-        if self.Principal is not None:
-            self.Principal.Died -= self._person_died
+    @principal.setter 
+    def principal(self,value:Person)->None:
+        if self.principal is not None:
+            self.principal.died -= self._person_died
 
         self._principal = value
 
-        if self.Principal is not None:
-            self.Principal.Died += self._person_died
+        if self.principal is not None:
+            self.principal.died += self._person_died
 
 
-    def person_nameChanged(self,sender:object,e:EventArgs)->None:
-        print("School %s just signed up %s"% (self.Name,sender.Name))
+    def person_name_changed(self,sender:object,e:EventArgs)->None:
+        print("School %s just signed up %s"% (self.name,sender.name))
 
     def person_moved(self,sender:object,e:MovedEventArgs)->None:
-        print("Person %s change its localitation by %s units" % (sender.Name,e.Delta))
+        print("Person %s change its localitation by %s units" % (sender.name,e.delta))
 
-    def person_locationchanging(self,sender:object,e:LocationChangingEventArgs)->None:
-        if e.Location > 100:
-            print("Person %s can't be changed that far, Location cannot be greater than 100. value: %d'" % (sender.Name,e.Location))
-            e.Cancel = True
+    def person_location_changing(self,sender:object,e:LocationChangingEventArgs)->None:
+        if e.location > 100:
+            print("Person %s can't be changed that far, location cannot be greater than 100. value: %d'" % (sender.name,e.location))
+            e.cancel = True
 
-    def _person_died(self,sender:object,e:EventArgs):
-        print("School %s is sad because principal %s die" % (self.Name,sender.Name))
+    def _person_died(self,sender:object,e:EventArgs): #This can be protected and shoud be due it is only interest of the school when the principal dies
+        print("School %s is sad because principal %s die" % (self.name,sender.name))
 
 
     def method(self,sender:object,e:EventArgs)->None:
@@ -226,7 +226,7 @@ class School:
 
 def callback_function(sender:object,e:EventArgs)->None:
     print("callback sender %s, Eventargs: %s" % (sender,e))
-    print("Person name %s" % sender.Name)
+    print("Person name %s" % sender.name)
 
 
 
@@ -236,50 +236,50 @@ school = School("University 97")#Creates an instance of School (This class conta
 
 
 #Use of a simple event (In this case implemented as a property change event)------------------------------------------------------------
-person.NameChanged += school.person_nameChanged #suscribe the school instance method to Namechanged event, (this method will be executed when the person's name change)
-person.NameChanged += callback_function #suscribe an extra simple function (this function will be executed when the person's name change)
-person.Name = "Susa" #Change the person name to trigger the event
+person.name_changed += school.person_name_changed #suscribe the school instance method to Namechanged event, (this method will be executed when the person's name change)
+person.name_changed += callback_function #suscribe an extra simple function (this function will be executed when the person's name change)
+person.name = "Susa" #Change the person name to trigger the event
 #----------------------------------------------------------------------------------------------------------------------------------------
 
 #How to unsuscribe an event--------------------------------------------------------------------------------------------------------------
-person.NameChanged -= callback_function#unsuscribe only the function
-person.Name = "Nos"#Change the person name to trigger the event
+person.name_changed -= callback_function#unsuscribe only the function
+person.name = "Nos"#Change the person name to trigger the event
 #----------------------------------------------------------------------------------------------------------------------------------------
 
 #Use of an event with custom EventArgs---------------------------------------------------------------------------------------------------
-person.Location =5#changing location to show nothing happens
-person.Moved += school.person_moved#add a suscriber to the event
-person.Location = 15#changing the location again to trigger the event
-person.Moved -= school.person_moved#unsuscribe to the event
-person.Location = 30#changing again the location to verify nothing happens
+person.location =5#changing location to show nothing happens
+person.moved += school.person_moved#add a suscriber to the event
+person.location = 15#changing the location again to trigger the event
+person.moved -= school.person_moved#unsuscribe to the event
+person.location = 30#changing again the location to verify nothing happens
 #----------------------------------------------------------------------------------------------------------------------------------------
 
 #Use of a custom Eventargs with setter (allows to suscriber send information) in this case is implemented as a pre-event (triggers before something happens) this allows in this case cancel the Change of the person's location
-person.LocationChanging += school.person_locationchanging #add the suscriber
-person.Location = 13 #change the location to trigger the event
-person.Location = 115 #changing location again to trigger the event, suscriber has the capability to cancel the asignation of the new value
-print("%s location at %s" %(person.Name, person.Location))#checking person's location it is (13,13) due suscriber cancel the asignation of the action thorugh the pre-event
+person.location_changing += school.person_location_changing #add the suscriber
+person.location = 13 #change the location to trigger the event
+person.location = 115 #changing location again to trigger the event, suscriber has the capability to cancel the asignation of the new value
+print("%s location at %s" %(person.name, person.location))#checking person's location it is (13,13) due suscriber cancel the asignation of the action thorugh the pre-event
 #----------------------------------------------------------------------------------------------------------------------------------------
 
 
 #suscribing a Delegate instead of passing a function/method directly (Due Delegates are callables) to an event, as well show case of using polimorfism, pasing an EventArgs parameter function to a LocationEventArgs parameter event
 delegate = Delegate(callback_function) #create a delagate with one function with signature Callable[[object, EventArgs], None]
-person.Moved += delegate #suscribing a Callable[[object, EventArgs], None] to Callable[[object, MovedEventArgs], None] event
-person.Location = 1#changing location to trigger event 
+person.moved += delegate #suscribing a Callable[[object, EventArgs], None] to Callable[[object, MovedEventArgs], None] event
+person.location = 1#changing location to trigger event 
 #in this case the event will provide an MovedEventArgs instance to the suscriber (the 'e' parameter), and suscriber handle the object as an EventArgs instance, by polimorfism is ok
 #-----------------------------------------------------------------------------------------------------------------------------------------
 
 #suscribing the methods internally on the class-------------------------------------------------------------------------------------------
-school.Principal = person #Asign a principal to the school, the school will unsuscribe the old principal (if any) and suscribe to the new principal.Died event due it is of its interest know when its principal dies
-person.Kill() #We kill the person :( (school will do its logic due its principal dies)
+school.principal = person #Asign a principal to the school, the school will unsuscribe the old principal (if any) and suscribe to the new principal.died event due it is of its interest know when its principal dies
+person.kill() #We kill the person :( (school will do its logic due its principal dies)
 #------------------------------------------------------------------------------------------------------------------------------------------
 
 #Static event example executing functions or methods
 def person_created_callback(sender:object,e:EventArgs):
-    print("Static callback works! person count:%d"% Person.get_InstanceCreated())
+    print("Static callback works! person count:%d"% Person.get_instance_created())
 
 
-Person.PersonCreated += person_created_callback
-Person.PersonCreated += school.method
+Person.person_created += person_created_callback
+Person.person_created += school.method
 
 person2 = Person("")

@@ -102,7 +102,7 @@ class CancellableEventArgs(EventArgs):
 
     
     @property
-    def Cancel(self)->bool:
+    def cancel(self)->bool:
         """
         Gets property value.
 
@@ -111,8 +111,8 @@ class CancellableEventArgs(EventArgs):
         """
         return self._cancel
     
-    @Cancel.setter
-    def Cancel(self,value:bool)->None:
+    @cancel.setter
+    def cancel(self,value:bool)->None:
         """
         Sets a new value.
 

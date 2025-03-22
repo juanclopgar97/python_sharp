@@ -17,5 +17,6 @@ setup(
     ],
     python_requires=">=3.6",  # Minimum required Python version
     install_requires=[  # Dependencies needed by package
-    ]
+    ],
+    include_package_data=True #include the data mentioned on the manifest
 )
