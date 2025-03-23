@@ -651,12 +651,12 @@ class MyClassPublisher:
   ...
 
 
-def subscriber(sender:object,e:EventArgs)->None: ...                # Asignable
-def subscriber_1(sender:object,e:FirstCustomEventArgs)->None: ...   # Asignable
-def subscriber_2(sender:object,e:SecondCustomEventArgs)->None: ...  # Asignable
-def subscriber_3(sender:object,e:ThirdCustomEventArgs)->None: ...   # Asignable
-def subscriber_4(sender:object,e:FourthCustomEventArgs)->None: ...  # NO asignable
-def subscriber_5(sender:object,e:FifthCustomEventArgs)->None: ...   # NO asignable
+def subscriber(sender:object,e:EventArgs)->None: ...                # Assignable
+def subscriber_1(sender:object,e:FirstCustomEventArgs)->None: ...   # Assignable
+def subscriber_2(sender:object,e:SecondCustomEventArgs)->None: ...  # Assignable
+def subscriber_3(sender:object,e:ThirdCustomEventArgs)->None: ...   # Assignable
+def subscriber_4(sender:object,e:FourthCustomEventArgs)->None: ...  # NO assignable
+def subscriber_5(sender:object,e:FifthCustomEventArgs)->None: ...   # NO assignable
 
 
 publisher = new MyClassPublisher()
