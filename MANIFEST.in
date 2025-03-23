@@ -1,3 +1,2 @@
 include README.md
 include LICENSE
-recursive-include documentation_images *.png *.jpg *.jpeg *.svg *.gif
