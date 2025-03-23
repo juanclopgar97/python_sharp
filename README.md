@@ -38,7 +38,7 @@
 
 python# (python sharp) module was created with the intention of adding EOP (event oriented programming) into python in the most native feeling, easy syntax way possible.
 
-EOP is a programming paradigm that allows execute actions (code) based on "doings" or events, this is really useful when you have to execute specific actions when something happens but you do not have the certainty when or how many times is going to happen.
+EOP is a programming paradigm that allows execute actions (code) based on "occurrences" or events, this is really useful when you have to execute specific actions when something happens but you do not have the certainty when or how many times is going to happen.
 
 This module was thought to accomplish EOP with 2 objectives in mind:
 
@@ -70,7 +70,7 @@ For objective 2, the module was architected thinking in how another EOP language
 
 1. C# implements events as a collection of callbacks that will be executed in some point of time, this collection of functions are called **Delegates**, invoking(executing) the delegate will cause the execution of all functions(callables) in its collection.
 
-2. delegates are not commonly exposed publicly, due security reasons. As the fields/attributes in a class have to be encapsulated, delegates as well, and the way to encapsulate them is with events. Fields/attributes are to properties as delegates are to events.
+2. delegates are not commonly exposed publicly, due to security reasons. As the fields/attributes in a class have to be encapsulated, delegates as well, and the way to encapsulate them is with events. Fields/attributes are to properties as delegates are to events.
 
 3. Properties encapsulate fields/attributes with 2 functions/methods called "get" and "set", which define the logic of how data should be GET and SET out of the object, in C# events encapsulate delegates with 2 functions as well called "add" and "remove", which define the logic of how functions/subscribers should be added or removed out of the delegate.
 
@@ -160,12 +160,12 @@ In some parts of this documentation you will find the words "**HIGHLY RECOMMENDE
 
 The omission of "**HIGHLY RECOMMENDED**" conventions (like naming conventions, or implementation conventions) might not break your code and it might be work without them, even you might found a way to create your own way to implement them, HOWEVER, this could lead to readability, clarity, maintenance and scalability issues of the code. 
 
-For this reason always **FOLLOW THE CONVENTIONS** due this is necessary to keep the readability, clarity, maintenance and scalability of your code, in this way other collaborators can go over your code easily and improve the work flow.
+For this reason always **FOLLOW THE CONVENTIONS** since this is necessary to keep the readability, clarity, maintenance and scalability of your code, in this way other collaborators can go over your code easily and improve the work flow.
 
 
 ## Use cases and examples:
 
-In this repository there are 2 main files "python_sharp.py" (which is the module file) and "test.py". This last file contains all the features applied into one single script, this could be really useful if you want to do a quick check about how something is implemented, however, due it is a "testing" script and not a "walk through" it could be confusing if you do not know what is going on, so it is **Highly recommended** read the below documentation which explains step by step how to implement every single feature in the module.
+In this repository there are 2 main files "python_sharp.py" (which is the module file) and "test.py". This last file contains all the features applied into one single script, this could be really useful if you want to do a quick check about how something is implemented, however, since it is a "testing" script and not a "walk through" it could be confusing if you do not know what is going on, so it is **Highly recommended** read the below documentation which explains step by step how to implement every single feature in the module.
 
 ### Delegates
 
@@ -290,7 +290,7 @@ Events can be implemented as members of an instance or a class (static events) o
   - Another example to clarify this could be an event called "window_closing", this event will notify that a window is about to close, the subscribers will have the power to pass information through the event arguments to cancel or modify the incoming action (in this case the window closing), this is really useful if the changes in the app are not saved.
 
 
-  In some rare occasions these name conventions will not satisfy your necessities to name your events due they don't describe properly what your events are going to do, and it is fine to name them as you want, however, is **HIGHLY RECOMMENDED** use these name conventions as much as possible, due this would lead to better readability, clarity, maintenance and scalability of the code, so, if you can name your events under the suggested name conventions **DO IT**, only use your own naming conventions if the naming conventions described in this document do not fit with what your event is going to do. 
+  In some rare occasions these name conventions will not satisfy your necessities to name your events due they don't describe properly what your events are going to do, and it is fine to name them as you want, however, is **HIGHLY RECOMMENDED** use these name conventions as much as possible, since this would lead to better readability, clarity, maintenance and scalability of the code, so, if you can name your events under the suggested name conventions **DO IT**, only use your own naming conventions if the naming conventions described in this document do not fit with what your event is going to do. 
 
 
 #### EventArgs, CustomEventArgs and CancellableEventArgs class
@@ -628,7 +628,7 @@ It is **HIGHLY IMPORTANT** to realize *moved* event signature is *Callable[[obje
 - *Callable[[object, MovedEventArgs], None]*
 - *Callable[[object, EventArgs], None]*
 
-This 2 signatures are ok due polymorphism, it can be confusing due at first sight seems like we are assigning an *EventArgs* objeect to a *MovedEventArgs* variable (*MovedEventArgs* <- *EventArgs*), this case in OOP (Object Oriented programming) is not valid, due it might throw a Traceback if a *MovedEventArgs* member is trying to be accessed in a *EventArgs* object. 
+This 2 signatures are ok due to polymorphism, it can be confusing due at first sight seems like we are assigning an *EventArgs* objeect to a *MovedEventArgs* variable (*MovedEventArgs* <- *EventArgs*), this case in OOP (Object Oriented programming) is not valid, due it might throw a Traceback if a *MovedEventArgs* member is trying to be accessed in a *EventArgs* object. 
 
 However in this example is not the case, the subscriber with *Callable[[object, EventArgs], None]* signature defines how the parameter object is going to be treated by the callable, in this case, the parameter will be used/treated as an *EventArgs*, and the event will provide a *MovedEventArgs* object to the callable so in reallity we are assigning a *MovedEventArgs* object to an *EventArgs* variable (*EventArgs* <- *MovedEventArgs*) which by polymorphism will not cause any issue trying to access any of the *EventArgs* members in a *MovedEventArgs* object.
 
@@ -687,7 +687,7 @@ Subscribers naming convention is not rigid, however it is **HIGHLY RECOMMENDED**
  - elements_moved
  - compenents_rendering
 
- In that way is easy to understand/know what is going to cause the subscriber execution due its name contains the name of its triggers (event names).
+ In that way is easy to understand/know what is going to cause the subscriber execution since its name contains the name of its triggers (event names).
 
 
 And the last difference but not less important is how the event is going to be triggered:
@@ -868,7 +868,7 @@ It is important to remember that:
 
 Static events are almost the same as the events described previoulsy, they can be implemented as well as "simple events", "with arguments" or "with modifiable arguments", key difference is the event is applied as a class event, no an instance event.
 
-For this section the example provided is a *simple static event* due it is the simplest way to show the differences, in case you want implement a *static event with arguments* go back to [Events with arguments](#Events-with-arguments) section and apply it to the class instead of the instance as the example of *simple static event* shows.
+For this section the example provided is a *simple static event* since it is the simplest way to show the differences, in case you want implement a *static event with arguments* go back to [Events with arguments](#Events-with-arguments) section and apply it to the class instead of the instance as the example of *simple static event* shows.
 
 Imagine a class that provides the number of instances that it creates, this variable should be defined as an *static variable*, due there is no necessity for every single class instance to contain the same exactly number, and even worse, if the number changes it needs to be updated on every single instance created , that is the reason why this variable should be implemented as *static variable*.
 
