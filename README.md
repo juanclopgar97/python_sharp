@@ -86,7 +86,7 @@ To install `python_sharp` you can follow either of the options listed:
 
 ### Disclaimer
 
-version 1.0.0 is only available through GitHub Pypi does not contain that version.
+version 1.0.0 is only available through GitHub PyPI does not contain that version.
 
 ### 1. Clone the Repository 
 If you want to explore the source code, you can clone the repository:
@@ -113,7 +113,7 @@ Example:
 pip install git+https://github.com/juanclopgar97/python_sharp.git@v1.0.0
 ```
 
-### 3. Install from Pypi
+### 3. Install from PyPI
 
 ```bash
 pip install python_sharp
@@ -180,7 +180,7 @@ from python_sharp import *
 def function_1(parameter_1:int): # defining a function with 1 parameter (int type)
   print("function 1")
 
-def function_2(parameter_1:int,parameter_2:str): # defining a function with 2 parametrs (int,str types)
+def function_2(parameter_1:int,parameter_2:str): # defining a function with 2 parameters (int,str types)
   print("function 2")
 
 delegate = Delegate() #creating a Delegate
@@ -628,9 +628,9 @@ It is **HIGHLY IMPORTANT** to realize *moved* event signature is *Callable[[obje
 - *Callable[[object, MovedEventArgs], None]*
 - *Callable[[object, EventArgs], None]*
 
-This 2 signatures are ok due polimorfism, it can be confusing due at first sight seems like we are asigning an *EventArgs* objeect to a *MovedEventArgs* variable (*MovedEventArgs* <- *EventArgs*), this case in OOP (Object Oriented programming) is not valid, due it might throw a Traceback if a *MovedEventArgs* member is trying to be accessed in a *EventArgs* object. 
+This 2 signatures are ok due polymorphism, it can be confusing due at first sight seems like we are assigning an *EventArgs* objeect to a *MovedEventArgs* variable (*MovedEventArgs* <- *EventArgs*), this case in OOP (Object Oriented programming) is not valid, due it might throw a Traceback if a *MovedEventArgs* member is trying to be accessed in a *EventArgs* object. 
 
-However in this example is not the case, the subscriber with *Callable[[object, EventArgs], None]* signature defines how the parameter object is going to be treated by the callable, in this case, the parameter will be used/treated as an *EventArgs*, and the event will provide a *MovedEventArgs* object to the callable so in reallity we are asigning a *MovedEventArgs* object to an *EventArgs* variable (*EventArgs* <- *MovedEventArgs*) which by polimorfism will not cause any issue trying to access any of the *EventArgs* members in a *MovedEventArgs* object.
+However in this example is not the case, the subscriber with *Callable[[object, EventArgs], None]* signature defines how the parameter object is going to be treated by the callable, in this case, the parameter will be used/treated as an *EventArgs*, and the event will provide a *MovedEventArgs* object to the callable so in reallity we are assigning a *MovedEventArgs* object to an *EventArgs* variable (*EventArgs* <- *MovedEventArgs*) which by polymorphism will not cause any issue trying to access any of the *EventArgs* members in a *MovedEventArgs* object.
 
 Next code block explains a general case for what was explained above (subscriber signatures accepted by an event).
 
