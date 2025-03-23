@@ -1,4 +1,4 @@
-<img src="https://github.com/juanclopgar97/python_sharp/blob/master/documentation_images/python_sharp.png" width="300">
+![Python Sharp Logo](https://raw.githubusercontent.com/juanclopgar97/python_sharp/refs/heads/master/documentation_images/python_sharp.png)
 
 ```python
     def project_finished(sender:object,e:EventArgs)->None:
@@ -148,7 +148,7 @@ from python_sharp import *
 
 Currently there is an upcoming effort to create a VS code extension to deliver a better expirence while using python sharp, an example of this is a custom OUTLINE to visualize *@property* and *@event* with its corresponding icons as the next image shows:
 
-<img src="https://github.com/juanclopgar97/python_sharp/blob/master/documentation_images/outline_support.png">
+![outline support](https://raw.githubusercontent.com/juanclopgar97/python_sharp/refs/heads/master/documentation_images/outline_support.png)
 
 and so much more!, if you want to see it come true you can show interest using and spreading the use of python sharp, this will help to add more support to the project.
 

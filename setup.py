@@ -2,7 +2,7 @@ from setuptools import setup
 
 setup(
     name="python_sharp",  # Unique name of your package on PyPI
-    version="1.1.1",  # Version of the package, following semantic versioning
+    version="1.1.2",  # Version of the package, following semantic versioning
     author="Juan Carlos Lopez Garcia",  # Author's name
     author_email="juanclopgar@gmail.com",  # Contact email
     description="python# (python sharp) is a module created to add EOP (event oriented programing) into python in the most native feeling, easy sintax way possible. Based on C# event implementation structure",  # Short description
