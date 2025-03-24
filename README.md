@@ -10,7 +10,7 @@
 
 ```
 ```
-"Develop is fun!!!"
+"Development is fun!!!"
 ```
 
 # Python# (Python sharp)
