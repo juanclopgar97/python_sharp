@@ -132,7 +132,7 @@ pip install python_sharp==1.0.1
 Upgrade it:
 
 ```bash
-pip install python-sharp --upgrade
+pip install python_sharp --upgrade
 ```
 
 
