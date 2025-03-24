@@ -160,12 +160,12 @@ In some parts of this documentation you will find the words "**HIGHLY RECOMMENDE
 
 The omission of "**HIGHLY RECOMMENDED**" conventions (like naming conventions, or implementation conventions) might not break your code and it might work without them, even you might found a way to create your own way to implement them, HOWEVER, this could lead to readability, clarity, maintenance and scalability issues of the code. 
 
-For this reason always **FOLLOW THE CONVENTIONS** since this is necessary to keep the readability, clarity, maintenance and scalability of your code, in this way other collaborators can go over your code easily and improve the work flow.
+For this reason, always **FOLLOW THE CONVENTIONS** since this is necessary to keep the readability, clarity, maintenance and scalability of your code, in this way other collaborators can go over your code easily and improve the work flow.
 
 
 ## Use cases and examples:
 
-In this repository there are 2 main files "python_sharp.py" (which is the module file) and "test.py". This last file contains all the features applied into one single script, this could be really useful if you want to do a quick check about how something is implemented, however, since it is a "testing" script and not a "walk through" it could be confusing if you do not know what is going on, so it is **Highly recommended** read the documentation below which explains step by step how to implement every single feature in the module.
+In this repository there are 2 main files "python_sharp.py" (which is the module file) and "test.py". This last file contains all the features applied into one single script, this can be really useful if you want to do a quick check about how something is implemented, however, since it is a "testing" script and not a "walk through" it could be confusing if you do not know what is going on, so it is **Highly recommended** read the documentation below which explains step by step how to implement every single feature in the module.
 
 ### Delegates
 
@@ -402,13 +402,13 @@ Below this text, the use cases and explanation about the events are shown, pleas
 
 On this example an event *name_changed* is implemented to notify when the person's name change.
 
-To implement a *simple event* the first thing you have to do is create a variable to store the subscribers, look at this variable as a "To do list" due it contains the callables that are going to be executed at some specific time.
+To implement a *simple event* the first thing you have to do is create a variable to store the subscribers, look at this variable as a "To do list" because it contains the callables that are going to be executed at some specific time.
 
 ```Python
 self._name_changed = Delegate() # it can be viewed as a "To do list"
 ```
 
-As you might notice the variable that is going to store the subscribers is a Delegate and the name starts with '_' to "protect" the attribute. Expose the attribute "publicly" is not a good practice, due other part of the code can manipulate the attribute wrongly or get/set information in a way that was not mean to. To fix this, we can define 2 methods to encapsulate the delegate (add/remove methods), Through these 2 methods the other objects in the code can subscribe/unsubscribe (add/remove) callables to our delegate.
+As you might notice the variable that is going to store the subscribers is a Delegate and the name starts with '_' to "protect" the attribute. Expose the attribute "publicly" is not a good practice, because other parts of the code can manipulate the attribute wrongly or get/set information in a way that was not mean to. To fix this, we can define 2 methods to encapsulate the delegate (add/remove methods), Through these 2 methods the other objects in the code can subscribe/unsubscribe (add/remove) callables to our delegate.
 
 ```Python
   @event 
@@ -504,7 +504,7 @@ The next snipped code shows and example of how the *simple events* should be imp
     self._name_changed -= value 
 ```
 
-This is done with the intention of clarify what is the event expecting from its subscribers signature.
+This is done with the intention of clarifying what is the event expecting from its subscribers signature.
 
 The omission of this event annotation convention do not affect how the code works, however, it could lead to problems of readability, clarity, maintenance and scalability. For these reasons **ALWAYS** place the event annotations, this is the only way for the event to communicate what is he expecting from its subscribers.
 
@@ -628,7 +628,7 @@ It is **HIGHLY IMPORTANT** to realize *moved* event signature is *Callable[[obje
 - *Callable[[object, MovedEventArgs], None]*
 - *Callable[[object, EventArgs], None]*
 
-These 2 signatures are ok because of polymorphism, it can be confusing due at first sight seems like we are assigning an *EventArgs* objeect to a *MovedEventArgs* variable (*MovedEventArgs* <- *EventArgs*), this case in OOP (Object Oriented programming) is not valid, due it might throw a Traceback if a *MovedEventArgs* member is trying to be accessed in a *EventArgs* object. 
+These 2 signatures are ok because of polymorphism, it can be confusing due at first sight seems like we are assigning an *EventArgs* objeect to a *MovedEventArgs* variable (*MovedEventArgs* <- *EventArgs*), this case in OOP (Object Oriented programming) is not valid, because it might throw a Traceback if a *MovedEventArgs* member is trying to be accessed in a *EventArgs* object. 
 
 However in this example is not the case, the subscriber with *Callable[[object, EventArgs], None]* signature defines how the parameter object is going to be treated by the callable, in this case, the parameter will be used/treated as an *EventArgs*, and the event will provide a *MovedEventArgs* object to the callable so in reallity we are assigning a *MovedEventArgs* object to an *EventArgs* variable (*EventArgs* <- *MovedEventArgs*) which by polymorphism will not cause any issue trying to access any of the *EventArgs* members in a *MovedEventArgs* object.
 
@@ -829,7 +829,7 @@ As you can see our custom *EventArgs* is *LocationChangingEventArgs* this class 
 
 Key factor to know when an event is an *Event with modifiable argument* is if the ***EventArgs* class class contains a property with a setter**.
 
-*LocationChangingEventArgs* does not contain a property with a setter by itself, but due it inherits from an *EventArgs* which contains it (*CancellableEventArgs*), we can consider that *LocationChangingEventArgs* actually contains a property with a setter.
+*LocationChangingEventArgs* does not contain a property with a setter by itself, but because it inherits from an *EventArgs* which contains it (*CancellableEventArgs*), we can consider that *LocationChangingEventArgs* actually contains a property with a setter.
 
 For this particular example *cancel* property is set to *False* by default, when the  *EventArgs* object is passed to the subscribers now they have the ability to change *cancel* value property:
 
