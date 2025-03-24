@@ -1,8 +1,8 @@
-![Python Sharp Logo](https://raw.githubusercontent.com/juanclopgar97/python_sharp/refs/heads/master/documentation_images/python_sharp.png)
+![Python Sharp Logo](https://raw.githubusercontent.com/juanclopgar97/Python_sharp/refs/heads/master/documentation_images/Python_sharp.png)
 
-```python
+```Python
     def project_finished(sender:object,e:EventArgs)->None:
-      print("Develop is fun!!!")
+      print("Development is fun!!!")
 
     project = Project() 
     project.finished += project_finished
@@ -36,18 +36,18 @@
 
 ## Introduction
 
-python# (python sharp) module was created with the intention of adding EOP (event oriented programming) into python in the most native feeling, easy syntax way possible.
+Python# (Python sharp) module was created with the intention of adding EOP (event oriented programming) into Python in the most native feeling, easy syntax way possible.
 
 EOP is a programming paradigm that allows execute actions (code) based on "occurrences" or events, this is really useful when you have to execute specific actions when something happens but you do not have the certainty when or how many times is going to happen.
 
 This module was thought to accomplish EOP with 2 objectives in mind:
 
-1. Features should look and feel like a native python feature.
-2. Implementation should be based in another famous EOP language to decrease learning curve and improve user experience.
+1. Features should look and feel like native Python features.
+2. Implementation should be based in another famous EOP language to reduce the learning curve and improve user experience.
 
-Events are just another possible way to declare a class member like: fields/attributes, properties and methods, python already have a way to define a property with **@property**, this helps to define objective number 1, for this reason events are implemented with **@event** syntax to be consistent with python:
+Events are just another possible way to declare a class member like: fields/attributes, properties and methods, Python already have a way to define a property with **@property**, this helps to define objective number 1, for this reason events are implemented with **@event** syntax to be consistent with Python:
 
-```python #5
+```Python #5
 class Person:
   def __init__(self,name:str)->None:
     self._name = name
@@ -70,7 +70,7 @@ For objective 2, the module was architected thinking in how another EOP language
 
 1. C# implements events as a collection of callbacks that will be executed in some point of time, this collection of functions are called **Delegates**, invoking(executing) the delegate will cause the execution of all functions(callables) in its collection.
 
-2. delegates are not commonly exposed publicly, due to security reasons. As the fields/attributes in a class have to be encapsulated, delegates as well, and the way to encapsulate them is with events. Fields/attributes are to properties as delegates are to events.
+2. delegates are not commonly exposed publicly, for security reasons. As the fields/attributes in a class have to be encapsulated, delegates as well, and the way to encapsulate them is with events. Fields/attributes are to properties as delegates are to events.
 
 3. Properties encapsulate fields/attributes with 2 functions/methods called "get" and "set", which define the logic of how data should be GET and SET out of the object, in C# events encapsulate delegates with 2 functions as well called "add" and "remove", which define the logic of how functions/subscribers should be added or removed out of the delegate.
 
@@ -82,7 +82,7 @@ For objective 2, the module was architected thinking in how another EOP language
 - **Python**: Version 3.6 or higher
 - **pip**: Python package manager
 
-To install `python_sharp` you can follow either of the options listed:
+To install `Python_sharp` you can follow either of the options listed:
 
 ### Disclaimer
 
@@ -91,91 +91,91 @@ version 1.0.0 is only available through GitHub PyPI does not contain that versio
 ### 1. Clone the Repository 
 If you want to explore the source code, you can clone the repository:
 ```bash
-git clone https://github.com/juanclopgar97/python_sharp.git
-cd python_sharp
+git clone https://github.com/juanclopgar97/Python_sharp.git
+cd Python_sharp
 ```
 
 ### 2. Install the package directly from GitHub using pip:
 
 ```bash
-pip install git+https://github.com/juanclopgar97/python_sharp.git
+pip install git+https://github.com/juanclopgar97/Python_sharp.git
 ```
 
 from a specific branch/commit/version:
 
 ```bash
-pip install git+https://github.com/juanclopgar97/python_sharp.git@<branch_or_commit_or_version>
+pip install git+https://github.com/juanclopgar97/Python_sharp.git@<branch_or_commit_or_version>
 ```
 
 Example:
 
 ```bash
-pip install git+https://github.com/juanclopgar97/python_sharp.git@v1.0.0
+pip install git+https://github.com/juanclopgar97/Python_sharp.git@v1.0.0
 ```
 
 ### 3. Install from PyPI
 
 ```bash
-pip install python_sharp
+pip install Python_sharp
 ```
 or select your version
 
 ```bash
-pip install python_sharp==<version>
+pip install Python_sharp==<version>
 ```
 
 Example:
 
 ```bash
-pip install python_sharp==1.0.1
+pip install Python_sharp==1.0.1
 ```
 Upgrade it:
 
 ```bash
-pip install python-sharp --upgrade
+pip install Python-sharp --upgrade
 ```
 
 
 ### Usage
 
-```python
-from python_sharp import *
+```Python
+from Python_sharp import *
 
 #your code
 ```
 
 ## Tools and support
 
-Currently there is an upcoming effort to create a VS code extension to deliver a better experience while using python sharp, an example of this is a custom OUTLINE to visualize *@property* and *@event* with its corresponding icons as the next image shows:
+Currently there is an upcoming effort to create a VS code extension to deliver a better experience while using Python sharp, an example of this is a custom OUTLINE to visualize *@property* and *@event* with its corresponding icons as the next image shows:
 
-![outline support](https://raw.githubusercontent.com/juanclopgar97/python_sharp/refs/heads/master/documentation_images/outline_support.png)
+![outline support](https://raw.githubusercontent.com/juanclopgar97/Python_sharp/refs/heads/master/documentation_images/outline_support.png)
 
-and so much more!, if you want to see it come true you can show interest using and spreading the use of python sharp, this will help to add more support to the project.
+and so much more!, if you want to see it come true you can show interest using and spreading the use of Python sharp, this will help to add more support to the project.
 
-To create an enhancement request, report a bug, raise a question etc. you can use the [issues](https://github.com/juanclopgar97/python_sharp/issues) section of this repository with the corresponding labels **enhancement**, **bug**, **question** etc. in this way collaborators can check for the request and attend it.
+To create an enhancement request, report a bug, raise a question etc. you can use the [issues](https://github.com/juanclopgar97/Python_sharp/issues) section of this repository with the corresponding labels **enhancement**, **bug**, **question** etc. in this way collaborators can check for the request and attend it.
 
 ## Important disclaimer
 
-In some parts of this documentation you will find the words "**HIGHLY RECOMMENDED**", this words are used to highlight some important use aspects of python sharp.
+In some parts of this documentation you will find the words "**HIGHLY RECOMMENDED**", these words are used to highlight some important use aspects of Python sharp.
 
-The omission of "**HIGHLY RECOMMENDED**" conventions (like naming conventions, or implementation conventions) might not break your code and it might be work without them, even you might found a way to create your own way to implement them, HOWEVER, this could lead to readability, clarity, maintenance and scalability issues of the code. 
+The omission of "**HIGHLY RECOMMENDED**" conventions (like naming conventions, or implementation conventions) might not break your code and it might work without them, even you might found a way to create your own way to implement them, HOWEVER, this could lead to readability, clarity, maintenance and scalability issues of the code. 
 
 For this reason always **FOLLOW THE CONVENTIONS** since this is necessary to keep the readability, clarity, maintenance and scalability of your code, in this way other collaborators can go over your code easily and improve the work flow.
 
 
 ## Use cases and examples:
 
-In this repository there are 2 main files "python_sharp.py" (which is the module file) and "test.py". This last file contains all the features applied into one single script, this could be really useful if you want to do a quick check about how something is implemented, however, since it is a "testing" script and not a "walk through" it could be confusing if you do not know what is going on, so it is **Highly recommended** read the below documentation which explains step by step how to implement every single feature in the module.
+In this repository there are 2 main files "Python_sharp.py" (which is the module file) and "test.py". This last file contains all the features applied into one single script, this could be really useful if you want to do a quick check about how something is implemented, however, since it is a "testing" script and not a "walk through" it could be confusing if you do not know what is going on, so it is **Highly recommended** read the documentation below which explains step by step how to implement every single feature in the module.
 
 ### Delegates
 
 Python sharp Delegates are a list of callables with the same signature, when a delegate is being executed (delegates are callable objects), it executes every single callable in its list.
 
 #### How to add callables into a Delegate
-It is really important to keep the callables added into the delegate with consistent signatures due parameters passed to the delegate when is being executed are the same ones passed to every single callable in the collection, so if one callable signature is expecting only 2 parameters and the next callable 3 parameters this is going to cause a TypeError that might look like this: 
+It is really important to keep the callables added into the delegate with consistent signatures because parameters passed to the delegate when is being executed are the same ones passed to every single callable in the collection, so if one callable signature is expecting only 2 parameters and the next callable 3 parameters this is going to cause a TypeError that might look like this: 
 
-```python
-from python_sharp import *
+```Python
+from Python_sharp import *
 
 def function_1(parameter_1:int): # defining a function with 1 parameter (int type)
   print("function 1")
@@ -198,7 +198,7 @@ Traceback (most recent call last):
   File "c:\PATH\test.py", line 341, in <module>
     delegate(5) # executing the delegate with only 1 parameter
     ^^^^^^^^^^^
-  File "c:\PATH\python_sharp.py", line 72, in __call__
+  File "c:\PATH\Python_sharp.py", line 72, in __call__
     results.append(callable( *args, **kwds))
                    ^^^^^^^^^^^^^^^^^^^^^^^^
 TypeError: function_2() missing 1 required positional argument: 'parameter_2'
@@ -210,8 +210,8 @@ Here *function_1* was executed correctly due the signature of the function match
 
 Once the delegate is executed you can get the returned values (if Any) as a tuple returned by the delegate, this tuple represents the values returned by every callable in the delegate's callable collection:
 
-```python
-from python_sharp import *
+```Python
+from Python_sharp import *
 
 def function(text:str):
   print("%s, Function is being executed!" % text)
@@ -290,7 +290,7 @@ Events can be implemented as members of an instance or a class (static events) o
   - Another example to clarify this could be an event called "window_closing", this event will notify that a window is about to close, the subscribers will have the power to pass information through the event arguments to cancel or modify the incoming action (in this case the window closing), this is really useful if the changes in the app are not saved.
 
 
-  In some rare occasions these name conventions will not satisfy your necessities to name your events due they don't describe properly what your events are going to do, and it is fine to name them as you want, however, is **HIGHLY RECOMMENDED** use these name conventions as much as possible, since this would lead to better readability, clarity, maintenance and scalability of the code, so, if you can name your events under the suggested name conventions **DO IT**, only use your own naming conventions if the naming conventions described in this document do not fit with what your event is going to do. 
+  In some rare occasions these name conventions will not satisfy your necessities to name your events due they don't describe properly what your events are going to do, and it is fine to name them as you want, however, it is **HIGHLY RECOMMENDED** use these name conventions as much as possible, since this would lead to better readability, clarity, maintenance and scalability of the code, so, if you can name your events under the suggested name conventions **DO IT**, only use your own naming conventions if the naming conventions described in this document do not fit with what your event is going to do. 
 
 
 #### EventArgs, CustomEventArgs and CancellableEventArgs class
@@ -304,7 +304,7 @@ Events can be implemented as members of an instance or a class (static events) o
     As a use case example imagine an event called *moved*, this event notifies when the object moves, but maybe only notify the movement is not enough and we want to inform how much the object moves, this is a perfect use for our custom *EventArgs* class:
 
 
-    ```python
+    ```Python
     class MovedEventArgs(EventArgs): # example of Custom EventArgs to pass event information (distance moved in this case)
 
         _delta:int
@@ -320,7 +320,7 @@ Events can be implemented as members of an instance or a class (static events) o
 
 - **Events with modifiable arguments** use a custom class that inherit from *EventArgs* class to describe what arguments are going to be passed from the subscriber to the publisher, this module already include one example of this approach *CancellableEventargs*:
 
-    ```python
+    ```Python
     
     class CancellableEventArgs(EventArgs):
     
@@ -351,8 +351,8 @@ Below this text, the use cases and explanation about the events are shown, pleas
 
 ##### Simple events
 
-  ```python
-  from python_sharp import *
+  ```Python
+  from Python_sharp import *
 
   class Person: 
     
@@ -373,11 +373,11 @@ Below this text, the use cases and explanation about the events are shown, pleas
       self._name_changed(self,e) 
 
     @event 
-    def name_changed(self,value)->None: # This example doesn't contain the parameter annotations for simplicity due it is the first example, however (as the document will explain in the summary of simple events), it is really important to place the event annotations. (There is a link at the end of this code block to go to the explanation)
+    def name_changed(self,value)->None: # This example doesn't contain the parameter annotations for simplicity because it is the first example, however (as the document will explain in the summary of simple events), it is really important to place the event annotations. (There is a link at the end of this code block to go to the explanation)
       self._name_changed += value
 
     @name_changed.remove
-    def name_changed(self,value)->None: # Annotations are not included for simplicity due it is the first example
+    def name_changed(self,value)->None: # Annotations are not included for simplicity because it is the first example
       self._name_changed -= value 
 
 
@@ -404,13 +404,13 @@ On this example an event *name_changed* is implemented to notify when the person
 
 To implement a *simple event* the first thing you have to do is create a variable to store the subscribers, look at this variable as a "To do list" due it contains the callables that are going to be executed at some specific time.
 
-```python
+```Python
 self._name_changed = Delegate() # it can be viewed as a "To do list"
 ```
 
 As you might notice the variable that is going to store the subscribers is a Delegate and the name starts with '_' to "protect" the attribute. Expose the attribute "publicly" is not a good practice, due other part of the code can manipulate the attribute wrongly or get/set information in a way that was not mean to. To fix this, we can define 2 methods to encapsulate the delegate (add/remove methods), Through these 2 methods the other objects in the code can subscribe/unsubscribe (add/remove) callables to our delegate.
 
-```python
+```Python
   @event 
   def name_changed(self,value)->None:
     self._name_changed += value # add the new callable to the attribute with a delegate
@@ -433,16 +433,16 @@ Once this is in place, we have:
 
 Now we need to execute the callables in the right momment, in this case the event is called "name_changed" so the callables should be executed when the name changes, this means our extra logic needs to be added in the *name* setter due that is the part of the code that has this responsability (change the person's name).
 
-```python
+```Python
   @name.setter 
   def name(self,value:str)->None:
     self._name = value
     # execute our "To do list" or delegate
 ```
 
-In the snippet code above the comment defines where the "To do list" needs to be executed, however, sometimes the own object needs to implement its own logic when (in this case) the property *name* change, for this purpose is **HIGHLY RECOMMENDED** as a good practice define another function/method called "\_on\_[EVENT NAME]"
+In the snippet code above the comment defines where the "To do list" needs to be executed, however, sometimes the own object needs to implement its own logic when (in this case) the property *name* change, for this purpose it is **HIGHLY RECOMMENDED** as a good practice define another function/method called "\_on\_[EVENT NAME]"
 
-```python
+```Python
   @name.setter 
   def name(self,value:str)->None:
     self._name = value
@@ -457,9 +457,9 @@ Inside of this method the own internal and external logic when the name change m
 In this case the class Person doesn't need to do "something" when the name changes (internal logic), so we only need to execute the external logic (execute the delegate)
 
 
-Now we have a way to add/remove subscribers and trigger the event, however, you might notice the code above is not exactly the same as the example code, this is because despite the event is now implemented and working is not following a good practice CONVENTION. So even with a working code, is **HIGHLY RECOMMENDED** follow next convention:
+Now we have a way to add/remove subscribers and trigger the event, however, you might notice the code above is not exactly the same as the example code, this is because despite the event is now implemented and working is not following a good practice CONVENTION. So even with a working code, it is **HIGHLY RECOMMENDED** follow next convention:
 
-```python
+```Python
   @name.setter 
   def name(self,value:str)->None:
     self._name = value
@@ -494,7 +494,7 @@ You can notice 2 things
 
 The next snipped code shows and example of how the *simple events* should be implemented with the **HIGHLY RECOMMENDED** event annotation convention: 
 
-```python
+```Python
   @event 
   def name_changed(self,value:Callable[[object, EventArgs], None])->None:
     self._name_changed += value
@@ -511,7 +511,7 @@ The omission of this event annotation convention do not affect how the code work
 
 To use the event:
 
-```python
+```Python
 def person_name_changed(sender:object,e:EventArgs)->None: #function to be executed when the name changes (subscriber)
   print("person change its name to %s" % sender.name)
 
@@ -525,8 +525,8 @@ person.name = "Something" # change the name again to prove 'person_name_changed'
 
 ##### Events with arguments
 
-  ```python
-  from python_sharp import *
+  ```Python
+  from Python_sharp import *
   from typing import Callable
 
   class MovedEventArgs(EventArgs):
@@ -593,7 +593,7 @@ person.name = "Something" # change the name again to prove 'person_name_changed'
 
 On this example an event named "moved" is implemented to notify when a person moves and provide how much does the person move.
 
-```python
+```Python
 class MovedEventArgs(EventArgs):
 
   _delta:int
@@ -611,7 +611,7 @@ In this case a custom EventArgs is created in order to be capable of store the e
 
 In the next code block we can see how the event is being defined:
 
-```python
+```Python
   @event 
   def moved(self,value:Callable[[object, MovedEventArgs], None])->None:
     self._moved += value
@@ -628,7 +628,7 @@ It is **HIGHLY IMPORTANT** to realize *moved* event signature is *Callable[[obje
 - *Callable[[object, MovedEventArgs], None]*
 - *Callable[[object, EventArgs], None]*
 
-This 2 signatures are ok due to polymorphism, it can be confusing due at first sight seems like we are assigning an *EventArgs* objeect to a *MovedEventArgs* variable (*MovedEventArgs* <- *EventArgs*), this case in OOP (Object Oriented programming) is not valid, due it might throw a Traceback if a *MovedEventArgs* member is trying to be accessed in a *EventArgs* object. 
+These 2 signatures are ok because of polymorphism, it can be confusing due at first sight seems like we are assigning an *EventArgs* objeect to a *MovedEventArgs* variable (*MovedEventArgs* <- *EventArgs*), this case in OOP (Object Oriented programming) is not valid, due it might throw a Traceback if a *MovedEventArgs* member is trying to be accessed in a *EventArgs* object. 
 
 However in this example is not the case, the subscriber with *Callable[[object, EventArgs], None]* signature defines how the parameter object is going to be treated by the callable, in this case, the parameter will be used/treated as an *EventArgs*, and the event will provide a *MovedEventArgs* object to the callable so in reallity we are assigning a *MovedEventArgs* object to an *EventArgs* variable (*EventArgs* <- *MovedEventArgs*) which by polymorphism will not cause any issue trying to access any of the *EventArgs* members in a *MovedEventArgs* object.
 
@@ -636,7 +636,7 @@ Next code block explains a general case for what was explained above (subscriber
 
 "..." indicates that there is code is being omitted due it is not relevant to show the desire concept:
 
-```python
+```Python
 class EventArgs:...
 class FirstCustomEventArgs(EventArgs):...
 class SecondCustomEventArgs(FirstCustomEventArgs):...
@@ -692,7 +692,7 @@ Subscribers naming convention is not rigid, however it is **HIGHLY RECOMMENDED**
 
 And the last difference but not less important is how the event is going to be triggered:
 
-```python
+```Python
   @location.setter
   def location(self,value:int)->None:      
     previous = self.location 
@@ -720,8 +720,8 @@ Second difference is when *location* settter is calling *\_on\_moved* method, no
 
 ##### Events with modifiable arguments 
 
-  ```python
-  from python_sharp import *
+  ```Python
+  from Python_sharp import *
   from typing import Callable
 
   class LocationChangingEventArgs(CancellableEventArgs):
@@ -793,8 +793,8 @@ On this example an event named "location_changing" is implemented to notify when
 
 Key difference is the way the custom *EventArgs* is defined:
 
-```python
-class CancellableEventArgs(EventArgs): #Defined already on python_sharp module
+```Python
+class CancellableEventArgs(EventArgs): #Defined already on Python_sharp module
   
   _cancel:bool
 
@@ -833,7 +833,7 @@ Key factor to know when an event is an *Event with modifiable argument* is if th
 
 For this particular example *cancel* property is set to *False* by default, when the  *EventArgs* object is passed to the subscribers now they have the ability to change *cancel* value property:
 
-```python
+```Python
 def person_location_changing(sender:object,e:LocationChangingEventArgs):
   if e.value > 100:
     e.cancel = True
@@ -841,7 +841,7 @@ def person_location_changing(sender:object,e:LocationChangingEventArgs):
 
 In the code block above is shown how the subscriber uses *e.value* to determine if *e.cancel* is going to be set to *True*, subsequently the publisher can use this value to modify some behavior:
 
-```python
+```Python
   @location.setter
   def location(self,value:int)->None:
     locationEventArgs = LocationChangingEventArgs(value)
@@ -874,8 +874,8 @@ Imagine a class that provides the number of instances that it creates, this vari
 
 Now imagine we want to notify when an instance is created, in other words when the *static variable* changes its value, as this event is going to notify something is going on with a static variable, we need a static event:
 
-```python
-from python_sharp import *
+```Python
+from Python_sharp import *
 
 class Person:
     
@@ -928,6 +928,6 @@ As you can see a *simple event* implementation is almost identical to *simple st
 Key differences:
 
 - All members used (variable, methods and event) are static (use of @staticevent instead of @event)
-- Get/Set methods to encapsulate the static variable are implemented as static methods due a lack of static properties python implementation
+- Get/Set methods to encapsulate the static variable are implemented as static methods due to the lack of static properties implementation in Python
 
-And that is it, those are all differences, so if you have questions about how this code works, is **HIGHLY RECOMMENDED** go back to [Events](#Events) section or raise a question on the [issues](https://github.com/juanclopgar97/python_sharp/issues) section of this repository.
+And that is it, those are all differences, so if you have questions about how this code works, it is **HIGHLY RECOMMENDED** go back to [Events](#Events) section or raise a question on the [issues](https://github.com/juanclopgar97/Python_sharp/issues) section of this repository.
