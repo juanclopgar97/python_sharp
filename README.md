@@ -38,9 +38,9 @@
 
 Python# (Python sharp) module was created with the intention of adding EOP (event oriented programming) into Python in the most native feeling, easy syntax way possible.
 
-EOP is a programming paradigm that allows execute actions (code) based on "occurrences" or events, this is really useful when you have to execute specific actions when something happens but you do not have the certainty when or how many times is going to happen.
+EOP is a programming paradigm that allows execute actions (code) based on "occurrences" or events, this is really useful when you have to execute specific actions when something happens but you do not have the certainty when or how many times is going to occur.
 
-This module was thought to accomplish EOP with 2 objectives in mind:
+This module was designed to accomplish EOP with 2 objectives in mind:
 
 1. Features should look and feel like native Python features.
 2. Implementation should be based in another famous EOP language to reduce the learning curve and improve user experience.
@@ -70,9 +70,9 @@ For objective 2, the module was architected thinking in how another EOP language
 
 1. C# implements events as a collection of callbacks that will be executed in some point of time, this collection of functions are called **Delegates**, invoking(executing) the delegate will cause the execution of all functions(callables) in its collection.
 
-2. delegates are not commonly exposed publicly, for security reasons. As the fields/attributes in a class have to be encapsulated, delegates as well, and the way to encapsulate them is with events. Fields/attributes are to properties as delegates are to events.
+2. delegates are not commonly exposed publicly, for security reasons. Just as fields/attributes in a class have to be encapsulated, so do delegates. The way to encapsulate them is with events. Fields/attributes are to properties as delegates are to events.
 
-3. Properties encapsulate fields/attributes with 2 functions/methods called "get" and "set", which define the logic of how data should be GET and SET out of the object, in C# events encapsulate delegates with 2 functions as well called "add" and "remove", which define the logic of how functions/subscribers should be added or removed out of the delegate.
+3. Properties encapsulate fields/attributes using two methods: "get" and "set", which define the logic of how data should be GET and SET out of the object, in C# events encapsulate delegates with 2 methods as well called "add" and "remove", which define the logic of how functions/subscribers should be added or removed out of the delegate.
 
 
 ## Installation
@@ -82,7 +82,7 @@ For objective 2, the module was architected thinking in how another EOP language
 - **Python**: Version 3.6 or higher
 - **pip**: Python package manager
 
-To install `Python_sharp` you can follow either of the options listed:
+To install `python_sharp` you can follow either of the options listed:
 
 ### Disclaimer
 
@@ -91,55 +91,55 @@ version 1.0.0 is only available through GitHub PyPI does not contain that versio
 ### 1. Clone the Repository 
 If you want to explore the source code, you can clone the repository:
 ```bash
-git clone https://github.com/juanclopgar97/Python_sharp.git
-cd Python_sharp
+git clone https://github.com/juanclopgar97/python_sharp.git
+cd python_sharp
 ```
 
 ### 2. Install the package directly from GitHub using pip:
 
 ```bash
-pip install git+https://github.com/juanclopgar97/Python_sharp.git
+pip install git+https://github.com/juanclopgar97/python_sharp.git
 ```
 
 from a specific branch/commit/version:
 
 ```bash
-pip install git+https://github.com/juanclopgar97/Python_sharp.git@<branch_or_commit_or_version>
+pip install git+https://github.com/juanclopgar97/python_sharp.git@<branch_or_commit_or_version>
 ```
 
 Example:
 
 ```bash
-pip install git+https://github.com/juanclopgar97/Python_sharp.git@v1.0.0
+pip install git+https://github.com/juanclopgar97/python_sharp.git@v1.0.0
 ```
 
 ### 3. Install from PyPI
 
 ```bash
-pip install Python_sharp
+pip install python_sharp
 ```
 or select your version
 
 ```bash
-pip install Python_sharp==<version>
+pip install python_sharp==<version>
 ```
 
 Example:
 
 ```bash
-pip install Python_sharp==1.0.1
+pip install python_sharp==1.0.1
 ```
 Upgrade it:
 
 ```bash
-pip install Python-sharp --upgrade
+pip install python-sharp --upgrade
 ```
 
 
 ### Usage
 
 ```Python
-from Python_sharp import *
+from python_sharp import *
 
 #your code
 ```
@@ -148,11 +148,11 @@ from Python_sharp import *
 
 Currently there is an upcoming effort to create a VS code extension to deliver a better experience while using Python sharp, an example of this is a custom OUTLINE to visualize *@property* and *@event* with its corresponding icons as the next image shows:
 
-![outline support](https://raw.githubusercontent.com/juanclopgar97/Python_sharp/refs/heads/master/documentation_images/outline_support.png)
+![outline support](https://raw.githubusercontent.com/juanclopgar97/python_sharp/refs/heads/master/documentation_images/outline_support.png)
 
 and so much more!, if you want to see it come true you can show interest using and spreading the use of Python sharp, this will help to add more support to the project.
 
-To create an enhancement request, report a bug, raise a question etc. you can use the [issues](https://github.com/juanclopgar97/Python_sharp/issues) section of this repository with the corresponding labels **enhancement**, **bug**, **question** etc. in this way collaborators can check for the request and attend it.
+To create an enhancement request, report a bug, raise a question etc. you can use the [issues](https://github.com/juanclopgar97/python_sharp/issues) section of this repository with the corresponding labels **enhancement**, **bug**, **question** etc. in this way collaborators can check for the request and attend it.
 
 ## Important disclaimer
 
@@ -165,7 +165,7 @@ For this reason always **FOLLOW THE CONVENTIONS** since this is necessary to kee
 
 ## Use cases and examples:
 
-In this repository there are 2 main files "Python_sharp.py" (which is the module file) and "test.py". This last file contains all the features applied into one single script, this could be really useful if you want to do a quick check about how something is implemented, however, since it is a "testing" script and not a "walk through" it could be confusing if you do not know what is going on, so it is **Highly recommended** read the documentation below which explains step by step how to implement every single feature in the module.
+In this repository there are 2 main files "python_sharp.py" (which is the module file) and "test.py". This last file contains all the features applied into one single script, this could be really useful if you want to do a quick check about how something is implemented, however, since it is a "testing" script and not a "walk through" it could be confusing if you do not know what is going on, so it is **Highly recommended** read the documentation below which explains step by step how to implement every single feature in the module.
 
 ### Delegates
 
@@ -175,7 +175,7 @@ Python sharp Delegates are a list of callables with the same signature, when a d
 It is really important to keep the callables added into the delegate with consistent signatures because parameters passed to the delegate when is being executed are the same ones passed to every single callable in the collection, so if one callable signature is expecting only 2 parameters and the next callable 3 parameters this is going to cause a TypeError that might look like this: 
 
 ```Python
-from Python_sharp import *
+from python_sharp import *
 
 def function_1(parameter_1:int): # defining a function with 1 parameter (int type)
   print("function 1")
@@ -198,7 +198,7 @@ Traceback (most recent call last):
   File "c:\PATH\test.py", line 341, in <module>
     delegate(5) # executing the delegate with only 1 parameter
     ^^^^^^^^^^^
-  File "c:\PATH\Python_sharp.py", line 72, in __call__
+  File "c:\PATH\python_sharp.py", line 72, in __call__
     results.append(callable( *args, **kwds))
                    ^^^^^^^^^^^^^^^^^^^^^^^^
 TypeError: function_2() missing 1 required positional argument: 'parameter_2'
@@ -211,7 +211,7 @@ Here *function_1* was executed correctly due the signature of the function match
 Once the delegate is executed you can get the returned values (if Any) as a tuple returned by the delegate, this tuple represents the values returned by every callable in the delegate's callable collection:
 
 ```Python
-from Python_sharp import *
+from python_sharp import *
 
 def function(text:str):
   print("%s, Function is being executed!" % text)
@@ -352,7 +352,7 @@ Below this text, the use cases and explanation about the events are shown, pleas
 ##### Simple events
 
   ```Python
-  from Python_sharp import *
+  from python_sharp import *
 
   class Person: 
     
@@ -526,7 +526,7 @@ person.name = "Something" # change the name again to prove 'person_name_changed'
 ##### Events with arguments
 
   ```Python
-  from Python_sharp import *
+  from python_sharp import *
   from typing import Callable
 
   class MovedEventArgs(EventArgs):
@@ -721,7 +721,7 @@ Second difference is when *location* settter is calling *\_on\_moved* method, no
 ##### Events with modifiable arguments 
 
   ```Python
-  from Python_sharp import *
+  from python_sharp import *
   from typing import Callable
 
   class LocationChangingEventArgs(CancellableEventArgs):
@@ -794,7 +794,7 @@ On this example an event named "location_changing" is implemented to notify when
 Key difference is the way the custom *EventArgs* is defined:
 
 ```Python
-class CancellableEventArgs(EventArgs): #Defined already on Python_sharp module
+class CancellableEventArgs(EventArgs): #Defined already on python_sharp module
   
   _cancel:bool
 
@@ -875,7 +875,7 @@ Imagine a class that provides the number of instances that it creates, this vari
 Now imagine we want to notify when an instance is created, in other words when the *static variable* changes its value, as this event is going to notify something is going on with a static variable, we need a static event:
 
 ```Python
-from Python_sharp import *
+from python_sharp import *
 
 class Person:
     
@@ -930,4 +930,4 @@ Key differences:
 - All members used (variable, methods and event) are static (use of @staticevent instead of @event)
 - Get/Set methods to encapsulate the static variable are implemented as static methods due to the lack of static properties implementation in Python
 
-And that is it, those are all differences, so if you have questions about how this code works, it is **HIGHLY RECOMMENDED** go back to [Events](#Events) section or raise a question on the [issues](https://github.com/juanclopgar97/Python_sharp/issues) section of this repository.
+And that is it, those are all differences, so if you have questions about how this code works, it is **HIGHLY RECOMMENDED** go back to [Events](#Events) section or raise a question on the [issues](https://github.com/juanclopgar97/python_sharp/issues) section of this repository.
