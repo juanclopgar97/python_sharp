@@ -1,4 +1,4 @@
-![Python Sharp Logo](https://raw.githubusercontent.com/juanclopgar97/Python_sharp/refs/heads/master/documentation_images/Python_sharp.png)
+![Python Sharp Logo](https://raw.githubusercontent.com/juanclopgar97/python_sharp/refs/heads/master/documentation_images/python_sharp.png)
 
 ```Python
     def project_finished(sender:object,e:EventArgs)->None:
