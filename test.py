@@ -130,7 +130,7 @@ class Person:
     def name_changed(self,value: Callable[[object, EventArgs], None])->None:
         self._name_changed += value 
         
-    @name_changed.remove
+    @name_changed.remover
     def name_changed(self,value: Callable[[object, EventArgs], None])->None:
        self._name_changed -= value
 
@@ -139,7 +139,7 @@ class Person:
     def moved(self,value:Callable[[object, MovedEventArgs], None])->None:
         self._moved += value
     
-    @moved.remove
+    @moved.remover
     def moved(self,value:Callable[[object, MovedEventArgs], None])->None:
        self._moved -= value  
 
@@ -148,7 +148,7 @@ class Person:
     def location_changing(self,value:Callable[[object, LocationChangingEventArgs], None])->None:
         self._location_changing += value
     
-    @location_changing.remove
+    @location_changing.remover
     def location_changing(self,value:Callable[[object, LocationChangingEventArgs], None])->None:
        self._location_changing -= value
 
@@ -157,7 +157,7 @@ class Person:
     def died(self,value:Callable[[object, EventArgs], None])->None:
         self._died += value
     
-    @died.remove
+    @died.remover
     def died(self,value:Callable[[object, EventArgs], None])->None:
         self._died -= value
 
@@ -166,7 +166,7 @@ class Person:
     def person_created(value:Callable[[object, EventArgs], None])->None:
         Person._person_created += value
 
-    @person_created.remove
+    @person_created.remover
     def person_created(value:Callable[[object, EventArgs], None])->None:
         Person._person_created -= value
 

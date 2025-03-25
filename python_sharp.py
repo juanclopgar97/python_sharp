@@ -151,13 +151,13 @@ class BaseEvent(ABC):
         self._fadd = None
         self._fremove = None
 
-        self.add(fadd)
-        self.remove(fremove)
+        self.adder(fadd)
+        self.remover(fremove)
 
         self._proxy = None
 
     
-    def add(self,fadd:Callable[[Callable[[object,EventArgs], None]], None] | None)->"BaseEvent":
+    def adder(self,fadd:Callable[[Callable[[object,EventArgs], None]], None] | None)->"BaseEvent":
         """
         Allows provide the function will be use to add a callable.
 
@@ -167,12 +167,12 @@ class BaseEvent(ABC):
             BaseEvent: Current instance with the new fadd function
         """
         if fadd is not None and self._fremove is not None and self._fremove.__name__ != fadd.__name__:
-            raise AttributeError("add function '%s'and remove function '%s' name missmatch, both members must have same name" % (fadd.__name__,self._fremove.__name__))
+            raise AttributeError("adder function '%s'and remover function '%s' name missmatch, both members must have same name" % (fadd.__name__,self._fremove.__name__))
 
         self._fadd = fadd
         return self
 
-    def remove(self,fremove:Callable[[Callable[[object,EventArgs], None]], None] | None)->"BaseEvent":
+    def remover(self,fremove:Callable[[Callable[[object,EventArgs], None]], None] | None)->"BaseEvent":
         """
         Allows provide the function will be use to remove a callable.
 
@@ -182,7 +182,7 @@ class BaseEvent(ABC):
             BaseEvent: Current instance with the new fremove function
         """
         if fremove is not None and self._fadd is not None and self._fadd.__name__ != fremove.__name__:
-            raise AttributeError("remove function '%s'and add function '%s' name missmatch, both members must have same name" % (fremove.__name__,self._fadd.__name__))
+            raise AttributeError("remover function '%s'and adder function '%s' name missmatch, both members must have same name" % (fremove.__name__,self._fadd.__name__))
 
         self._fremove = fremove
         return self
@@ -219,9 +219,9 @@ class BaseEvent(ABC):
             error_message = ""
 
             if self._fadd is None and self._fremove is None:
-                error_message = "event in %s is not defining any function (add/remove)" % owner
+                error_message = "event in %s is not defining any function (adder/remover)" % owner
             else:
-                function_info= (self._fremove,"add") if self._fadd is None else (self._fadd,"remove") 
+                function_info= (self._fremove,"adder") if self._fadd is None else (self._fadd,"remover") 
                 error_message = "event %s does not have '%s' function assigned in %s" % (function_info[0].__name__,function_info[1],owner)
             
             raise NotImplementedError(error_message) 

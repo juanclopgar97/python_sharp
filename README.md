@@ -72,7 +72,7 @@ For objective 2, the module was architected thinking in how another EOP language
 
 2. delegates are not commonly exposed publicly, for security reasons. Just as fields/attributes in a class have to be encapsulated, so do delegates. The way to encapsulate them is with events. Fields/attributes are to properties as delegates are to events.
 
-3. Properties encapsulate fields/attributes using two methods: "get" and "set", which define the logic of how data should be GET and SET out of the object, in C# events encapsulate delegates with 2 methods as well called "add" and "remove", which define the logic of how functions/subscribers should be added or removed out of the delegate.
+3. Properties encapsulate fields/attributes using two methods: "getter" and "setter", which define the logic of how data should be GET and SET out of the object, in C# events encapsulate delegates with 2 methods as well called "adder" and "remover", which define the logic of how functions/subscribers should be added or removed out of the delegate.
 
 
 ## Installation
@@ -376,7 +376,7 @@ Below this text, the use cases and explanation about the events are shown, pleas
     def name_changed(self,value)->None: # This example doesn't contain the parameter annotations for simplicity because it is the first example, however (as the document will explain in the summary of simple events), it is really important to place the event annotations. (There is a link at the end of this code block to go to the explanation)
       self._name_changed += value
 
-    @name_changed.remove
+    @name_changed.remover
     def name_changed(self,value)->None: # Annotations are not included for simplicity because it is the first example
       self._name_changed -= value 
 
@@ -408,21 +408,21 @@ To implement a *simple event* the first thing you have to do is create a variabl
 self._name_changed = Delegate() # it can be viewed as a "To do list"
 ```
 
-As you might notice the variable that is going to store the subscribers is a Delegate and the name starts with '_' to "protect" the attribute. Expose the attribute "publicly" is not a good practice, because other parts of the code can manipulate the attribute wrongly or get/set information in a way that was not mean to. To fix this, we can define 2 methods to encapsulate the delegate (add/remove methods), Through these 2 methods the other objects in the code can subscribe/unsubscribe (add/remove) callables to our delegate.
+As you might notice the variable that is going to store the subscribers is a Delegate and the name starts with '_' to "protect" the attribute. Expose the attribute "publicly" is not a good practice, because other parts of the code can manipulate the attribute wrongly or get/set information in a way that was not mean to. To fix this, we can define 2 methods to encapsulate the delegate (adder/remover methods), Through these 2 methods the other objects in the code can subscribe/unsubscribe (add/remove) callables to our delegate.
 
 ```Python
   @event 
   def name_changed(self,value)->None:
     self._name_changed += value # add the new callable to the attribute with a delegate
 
-  @name_changed.remove
+  @name_changed.remover
   def name_changed(self,value)->None:
     self._name_changed -= value # remove the callable to the attribute with a delegate
 ```
 
-Code above implements add/remove logic to the delegate. Function below *@event* decorator defines the logic for the *add* or how a callable should be added to our "To do list". Function below *@name_changed.remove* defines the logic for the *remove* or how a callable should be removed from the delegate
+Code above implements add/remove logic to the delegate. Function below *@event* decorator defines the logic for the *add* or how a callable should be added to our "To do list". Function below *@name_changed.remover* defines the logic for the *remover* or how a callable should be removed from the delegate
 
-Notice the functions HAVE to be named exactly with the same name, and if an *@event* is defined you **must** implement *@IDENTIFIER.remove* or the code will throw a traceback, this is to protect the integrity of the code and provide instructions about how to add AND remove a callable.
+Notice the functions HAVE to be named exactly with the same name, and if an *@event* is defined you **must** implement *@IDENTIFIER.remover* or the code will throw a traceback, this is to protect the integrity of the code and provide instructions about how to add AND remove a callable.
 
 The callable to be added/removed will be passed through the "value" parameter. Notice in this example "value" parameter doesn't have any type annotation, this is only to keep this first example "simple/readable" at first sight, however it is **HIGHLY RECOMMENDED** annotate the type as the following examples on this document (Events with arguments or Events with modifiable arguments examples contain these annnotations), due this is the way to indicate clearly what is the signature expected from the event to their subscribers (callables). [Link to event annotation convention explanation](#event-annotation-convention)
 
@@ -499,7 +499,7 @@ The next snipped code shows and example of how the *simple events* should be imp
   def name_changed(self,value:Callable[[object, EventArgs], None])->None:
     self._name_changed += value
 
-  @name_changed.remove
+  @name_changed.remover
   def name_changed(self,value:Callable[[object, EventArgs], None])->None:
     self._name_changed -= value 
 ```
@@ -516,9 +516,9 @@ def person_name_changed(sender:object,e:EventArgs)->None: #function to be execut
   print("person change its name to %s" % sender.name)
 
 person = Person("Juan")  #creates a person
-person.name_changed += person_name_changed # we add 'person_name_changed' (subscriber) to event name_changed of 'person', this line will execute function under @event decorator (add function)
+person.name_changed += person_name_changed # we add 'person_name_changed' (subscriber) to event name_changed of 'person', this line will execute function under @event decorator (adder function)
 person.name = "Carlos" # change the name to trigger the event (this will execute 'person_name_changed') 
-person.name_changed -= person_name_changed #unsubcribe the function, this line will execute function under @name_changed.remove decorator (remove function)
+person.name_changed -= person_name_changed #unsubcribe the function, this line will execute function under @name_changed.remover decorator (remover function)
 person.name = "Something" # change the name again to prove 'person_name_changed' is not executed anymore
 ```
 
@@ -568,7 +568,7 @@ person.name = "Something" # change the name again to prove 'person_name_changed'
     def moved(self,value:Callable[[object, MovedEventArgs], None])->None:
       self._moved += value
 
-    @moved.remove
+    @moved.remover
     def moved(self,value:Callable[[object, MovedEventArgs], None])->None:
       self._moved -= value  
 
@@ -616,7 +616,7 @@ In the next code block we can see how the event is being defined:
   def moved(self,value:Callable[[object, MovedEventArgs], None])->None:
     self._moved += value
 
-  @moved.remove
+  @moved.remover
   def moved(self,value:Callable[[object, MovedEventArgs], None])->None:
     self._moved -= value  
 ```
@@ -764,7 +764,7 @@ Second difference is when *location* settter is calling *\_on\_moved* method, no
     def location_changing(self,value:Callable[[object, LocationChangingEventArgs], None])->None:
       self._location_changing += value
 
-    @location_changing.remove
+    @location_changing.remover
     def location_changing(self,value:Callable[[object, LocationChangingEventArgs], None])->None:
       self._location_changing -= value
 
@@ -903,7 +903,7 @@ class Person:
   def person_created(value:Callable[[object, EventArgs], None])->None:
     Person._person_created += value
 
-  @person_created.remove
+  @person_created.remover
   def person_created(value:Callable[[object, EventArgs], None])->None:
     Person._person_created -= value
 
